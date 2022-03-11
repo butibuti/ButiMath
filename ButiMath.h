@@ -1,19 +1,29 @@
 #pragma once
 #ifndef BUTI_MATH_H
 #define BUTI_MATH_H
-namespace ButiEngine {
-	static const float BM_PI = 3.141592654f;
-	static const float BM_2PI = 6.283185307f;
-	static const float BM_1DIVPI = 0.318309886f;
-	static const float BM_1DIV2PI = 0.159154943f;
-	static const float BM_PIDIV2 = 1.570796327f;
-	static const float BM_PIDIV4 = 0.785398163f;
-	static const char BM_CHAR_MAX = 127;
-	static const short int BM_SHORT_MAX = 32767;
-	static const int BM_INT_MAX = 2147483647;
-	static const unsigned char BM_UCHAR_MAX = 256;
-	static const unsigned short int BM_USHORT_MAX = 65535;
-	static const unsigned int BM_UINT_MAX = 4294967295;
+
+
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
+
+namespace ButiEngine
+{
+	constexpr float BM_PI = 3.141592654f;
+	constexpr float BM_2PI = 6.283185307f;
+	constexpr float BM_1DIVPI = 0.318309886f;
+	constexpr float BM_1DIV2PI = 0.159154943f;
+	constexpr float BM_PIDIV2 = 1.570796327f;
+	constexpr float BM_PIDIV4 = 0.785398163f;
+	constexpr std::int8_t BM_CHAR_MAX = 127;
+	constexpr std::int16_t BM_SHORT_MAX = 32767;
+	constexpr std::int32_t BM_INT_MAX = 2147483647;
+	constexpr std::uint8_t BM_UCHAR_MAX = 256;
+	constexpr std::uint16_t BM_USHORT_MAX = 65535;
+	constexpr std::uint32_t BM_UINT_MAX = 4294967295;
 
 
 	namespace MathHelper {
@@ -23,11 +33,11 @@ namespace ButiEngine {
 			float quotient = BM_1DIV2PI * Value;
 			if (Value >= 0.0f)
 			{
-				quotient = static_cast<float>(static_cast<int>(quotient + 0.5f));
+				quotient = static_cast<float>(static_cast<std::int32_t>(quotient + 0.5f));
 			}
 			else
 			{
-				quotient = static_cast<float>(static_cast<int>(quotient - 0.5f));
+				quotient = static_cast<float>(static_cast<std::int32_t>(quotient - 0.5f));
 			}
 			float y = Value - BM_2PI * quotient;
 
@@ -54,44 +64,46 @@ namespace ButiEngine {
 			float p = ((((-2.6051615e-07f * y2 + 2.4760495e-05f) * y2 - 0.0013888378f) * y2 + 0.041666638f) * y2 - 0.5f) * y2 + 1.0f;
 			ref_Cos = sign * p;
 		}
-		static double Ceil(const double dSrc,const int iLen)
+		static double Ceil(const double dSrc,const std::int32_t iLen)
 		{
 			double	dRet;
 
 			dRet = dSrc * pow(10.0, iLen);
-			dRet = (double)(int)(dRet + 0.9);
+			dRet = (double)(std::int32_t)(dRet + 0.9);
 
 			return dRet * pow(10.0, -iLen);
 		}
-		static double Floor(const double dSrc,const int iLen)
+		static double Floor(const double dSrc,const std::int32_t iLen)
 		{
 			double dRet;
 
 			dRet = dSrc * pow(10.0, iLen);
-			dRet = (double)(int)(dRet);
+			dRet = (double)(std::int32_t)(dRet);
 
 			return dRet * pow(10.0, -iLen);
 		}
-		static double Round(const double dSrc,const int iLen)
+		static double Round(const double dSrc,const std::int32_t iLen)
 		{
 			double	dRet;
 
 			dRet = dSrc * pow(10.0, iLen);
-			dRet = (double)(int)(dRet + 0.5);
+			dRet = (double)(std::int32_t)(dRet + 0.5);
 
 			return dRet * pow(10.0, -iLen);
 		}
 
-		static float ToRadian(const float deg) {
+		template<typename T>
+		constexpr float ToRadian(const T deg)noexcept {
 
 			return deg * BM_PI / 180.0f;
 		}
-		static float ToDegree(const float rad) {
+		template<typename T>
+		constexpr float ToDegree(const T rad)noexcept {
 
 			return rad * 180.0f / BM_PI;
 		}
 
-		static char GetByteSize(const int arg_check) {
+		constexpr std::int8_t GetByteSize(const std::int32_t arg_check)noexcept {
 
 			if (arg_check <= BM_CHAR_MAX) {
 				return 1;
@@ -105,7 +117,7 @@ namespace ButiEngine {
 
 			return 8;
 		}
-		static char GetUnsignedByteSize(const UINT arg_check) {
+		constexpr std::int8_t GetUnsignedByteSize(const std::uint32_t arg_check) noexcept {
 
 			if (arg_check <= BM_UCHAR_MAX) {
 				return 1;
@@ -125,19 +137,19 @@ namespace ButiEngine {
 	struct Quat;
 	struct Matrix4x4;
 
-	struct UInt2   {
-		inline UInt2(int arg_x, int arg_y) {
+	struct Int2 {
+		explicit inline Int2(const std::int32_t arg_x,const std::int32_t arg_y) {
 			x = arg_x;
 			y = arg_y;
 		}
-		inline UInt2() {
+		explicit inline Int2() {
 			x = 0;
 			y = 0;
 		}
 #ifdef USE_DIRECTXMATH
 
-		operator DirectX::XMUINT2() {
-			return *(XMUINT2*)((void*)this);
+		operator DirectX::XMINT2() {
+			return *(XMINT2*)((void*)this);
 		}
 #endif // USE_DIRECTXMATH
 
@@ -147,21 +159,152 @@ namespace ButiEngine {
 		{
 			archive(x, y);
 		}
-		unsigned int x, y;
+		std::int32_t x, y;
+	};
+
+	struct Int3 {
+		explicit inline Int3(const std::int32_t arg_x,const std::int32_t arg_y,const std::int32_t arg_z) {
+			x = arg_x;
+			y = arg_y;
+			z = arg_z;
+		}
+		explicit inline Int3() {
+			x = 0;
+			y = 0;
+			z = 0;
+		}
+#ifdef USE_DIRECTXMATH
+
+		operator DirectX::XMINT2() {
+			return *(XMINT2*)((void*)this);
+		}
+#endif // USE_DIRECTXMATH
+
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y,z);
+		}
+		std::int32_t x, y,z;
+	};
+
+	struct Int4 {
+		explicit inline Int4(const std::int32_t arg_x,const std::int32_t arg_y,const std::int32_t arg_z,const std::int32_t arg_w) {
+			x = arg_x;
+			y = arg_y;
+			z = arg_z;
+			w = arg_w;
+		}
+		explicit inline Int4() {
+			x = 0;
+			y = 0;
+			z = 0;
+			w = 0;
+		}
+#ifdef USE_DIRECTXMATH
+
+		operator DirectX::XMINT4() {
+			return *(XMINT4*)((void*)this);
+		}
+#endif // USE_DIRECTXMATH
+
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y,z,w);
+		}
+		std::int32_t x, y,z,w;
+	};
+	struct UInt2 {
+		explicit inline UInt2(const std::uint32_t arg_x,const std::uint32_t arg_y) {
+			x = arg_x;
+			y = arg_y;
+		}
+		explicit inline UInt2() {
+			x = 0;
+			y = 0;
+		}
+#ifdef USE_DIRECTXMATH
+
+		operator DirectX::XMUINT2() {
+			return *(XMUINT2*)((void*)this);
+		}
+#endif // USE_DIRECTXMATH
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y);
+		}
+		std::uint32_t x, y;
+	};
+	struct UInt3 {
+		explicit inline UInt3(const std::uint32_t arg_x, const std::uint32_t arg_y, const std::uint32_t arg_z) {
+			x = arg_x;
+			y = arg_y;
+			z = arg_z;
+		}
+		explicit inline UInt3() {
+			x = 0;
+			y = 0;
+			z = 0;
+		}
+#ifdef USE_DIRECTXMATH
+
+		operator DirectX::XMUINT3() {
+			return *(XMUINT3*)((void*)this);
+		}
+#endif // USE_DIRECTXMATH
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y, z);
+		}
+		std::uint32_t x, y, z;
+	};
+	struct UInt4 {
+		explicit inline UInt4(const std::uint32_t arg_x, const std::uint32_t arg_y, const std::uint32_t arg_z, const std::uint32_t arg_w) {
+			x = arg_x;
+			y = arg_y;
+			z = arg_z;
+			w = arg_w;
+		}
+		explicit inline UInt4() {
+			x = 0;
+			y = 0;
+			z = 0;
+			w = 0;
+		}
+#ifdef USE_DIRECTXMATH
+
+		operator DirectX::XMUINT4() {
+			return *(XMUINT4*)((void*)this);
+		}
+#endif // USE_DIRECTXMATH
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y, z,w);
+		}
+		std::uint32_t x, y, z,w;
 	};
 
 	struct Matrix4x4 
 	{
-		explicit inline Matrix4x4() {
+		explicit inline Matrix4x4() noexcept{
 			_11 = 1.0f;	_12 = 0.0f;	_13 = 0.0f;	_14 = 0.0f;
 			_21 = 0.0f;	_22 = 1.0f;	_23 = 0.0f;	_24 = 0.0f;
 			_31 = 0.0f;	_32 = 0.0f;	_33 = 1.0f;	_34 = 0.0f;
 			_41 = 0.0f;	_42 = 0.0f;	_43 = 0.0f;	_44 = 1.0f;
 		}
+		explicit inline Matrix4x4(const float* v) {
+			memcpy(&_11, v, sizeof(Matrix4x4));
+		}
 		explicit inline Matrix4x4(const Quat& quat);
 		bool ShowUI() { return false; }
-		inline Vector4 operator*(const Vector4& other);
-		inline Vector3 operator*(const Vector3& other);
+		inline Vector4 operator*(const Vector4& other)const;
+		inline Vector3 operator*(const Vector3& other)const;
 
 		inline Matrix4x4 operator*(const Matrix4x4& other)const {
 			Matrix4x4 output;
@@ -174,7 +317,7 @@ namespace ButiEngine {
 			output._12 = (other._12 * x) + (other._22 * y) + (other._32 * z) + (other._42 * w);
 			output._13 = (other._13 * x) + (other._23 * y) + (other._33 * z) + (other._43 * w);
 			output._14 = (other._14 * x) + (other._24 * y) + (other._34 * z) + (other._44 * w);
-			
+
 
 			x = this->_21;
 			y = this->_22;
@@ -203,15 +346,87 @@ namespace ButiEngine {
 
 			return output;
 		}
+		inline Matrix4x4 operator*(const float v)const {
+			Matrix4x4 output;
+			output._11 = this->_11 * v; output._12 = this->_12 * v; output._13 = this->_13 * v; output._14 = this->_14 * v;
+			output._21 = this->_21 * v; output._22 = this->_22 * v; output._23 = this->_23 * v; output._24 = this->_24 * v;
+			output._31 = this->_31 * v; output._32 = this->_32 * v; output._33 = this->_33 * v; output._34 = this->_34 * v;
+			output._41 = this->_41 * v; output._42 = this->_42 * v; output._43 = this->_43 * v; output._44 = this->_44 * v;
+			return output;
+		}
+		inline Matrix4x4 operator*(const std::int32_t v)const {
+			Matrix4x4 output;
+			output._11 = this->_11 * v; output._12 = this->_12 * v; output._13 = this->_13 * v; output._14 = this->_14 * v;
+			output._21 = this->_21 * v; output._22 = this->_22 * v; output._23 = this->_23 * v; output._24 = this->_24 * v;
+			output._31 = this->_31 * v; output._32 = this->_32 * v; output._33 = this->_33 * v; output._34 = this->_34 * v;
+			output._41 = this->_41 * v; output._42 = this->_42 * v; output._43 = this->_43 * v; output._44 = this->_44 * v;
+			return output;
+		}
+		inline Matrix4x4 operator/(const float v)const {
+			Matrix4x4 output;
+			output._11 = this->_11 / v; output._12 = this->_12 / v; output._13 = this->_13 / v; output._14 = this->_14 / v;
+			output._21 = this->_21 / v; output._22 = this->_22 / v; output._23 = this->_23 / v; output._24 = this->_24 / v;
+			output._31 = this->_31 / v; output._32 = this->_32 / v; output._33 = this->_33 / v; output._34 = this->_34 / v;
+			output._41 = this->_41 / v; output._42 = this->_42 / v; output._43 = this->_43 / v; output._44 = this->_44 / v;
+			return output;
+		}
+		inline Matrix4x4 operator/(const std::int32_t v)const {
+			Matrix4x4 output;
+			output._11 = this->_11 / v; output._12 = this->_12 / v; output._13 = this->_13 / v; output._14 = this->_14 / v;
+			output._21 = this->_21 / v; output._22 = this->_22 / v; output._23 = this->_23 / v; output._24 = this->_24 / v;
+			output._31 = this->_31 / v; output._32 = this->_32 / v; output._33 = this->_33 / v; output._34 = this->_34 / v;
+			output._41 = this->_41 / v; output._42 = this->_42 / v; output._43 = this->_43 / v; output._44 = this->_44 / v;
+			return output;
+		}
+		inline Matrix4x4 operator+(const Matrix4x4& other)const {
+			Matrix4x4 output=*this;
+
+			output._11 += other._11; output._12 += other._12; output._13 += other._13; output._14 -= other._14;
+			output._21 += other._21; output._22 += other._22; output._23 += other._23; output._24 -= other._24;
+			output._31 += other._31; output._32 += other._32; output._33 += other._33; output._34 -= other._34;
+			output._41 += other._41; output._42 += other._42; output._43 += other._43; output._44 -= other._44;
+			return output;
+		}
+		inline Matrix4x4 operator-(const Matrix4x4& other)const {
+			Matrix4x4 output = *this;
+
+			output._11 -= other._11; output._12 -= other._12; output._13 -= other._13; output._14 -= other._14;
+			output._21 -= other._21; output._22 -= other._22; output._23 -= other._23; output._24 -= other._24;
+			output._31 -= other._31; output._32 -= other._32; output._33 -= other._33; output._34 -= other._34;
+			output._41 -= other._41; output._42 -= other._42; output._43 -= other._43; output._44 -= other._44;
+			return output;
+		}
+		inline Matrix4x4 operator- ()const {
+			Matrix4x4 output = *this;
+			output._11 = -output._11; output._12 = -output._12; output._13 = -output._13; output._14 = -output._14;
+			output._21 = -output._21; output._22 = -output._22; output._23 = -output._23; output._24 = -output._24;
+			output._31 = -output._31; output._32 = -output._32; output._33 = -output._33; output._34 = -output._34;
+			output._41 = -output._41; output._42 = -output._42; output._43 = -output._43; output._44 = -output._44;
+			return output;
+		}
 		inline Matrix4x4 operator*=(const Matrix4x4& other) {
-			*this=(*this) * other;
+			*this = (*this) * other;
 			return *this;
 		}
+		inline bool operator==(const Matrix4x4& other) const {
 
-		inline Vector4& operator [](const unsigned int idx);
+
+			return (this->_11 == other._11 && this->_12 == other._12 && this->_13 == other._13 && this->_14 == other._14 &&
+				this->_21 == other._21 && this->_22 == other._22 && this->_23 == other._23 && this->_24 == other._24 &&
+				this->_31 == other._31 && this->_32 == other._32 && this->_33 == other._33 && this->_34 == other._34 &&
+				this->_41 == other._41 && this->_42 == other._42 && this->_43 == other._43 && this->_44 == other._44
+				);
+		}
+		inline bool operator!=(const Matrix4x4& other) const {
 
 
-		inline Vector4 operator [](const unsigned int idx) const;
+			return !((*this) == other);
+		}
+
+		inline Vector4& operator [](const std::uint32_t idx);
+
+
+		inline Vector4 operator [](const std::uint32_t idx) const;
 
 		inline Matrix4x4& Identity()
 		{
@@ -357,8 +572,8 @@ namespace ButiEngine {
 		inline Matrix4x4& CreateFromEuler_local(const Vector3& arg_euler);
 		inline bool Same(const Matrix4x4& other, const float epsilon = 0.001f) const {
 
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
+			for (std::int32_t i = 0; i < 4; i++) {
+				for (std::int32_t j = 0; j < 4; j++) {
 					if (abs(this->m[i][j] - other.m[i][j]) > epsilon) {
 						return false;
 					}
@@ -636,9 +851,8 @@ namespace ButiEngine {
 
 	struct Vector2 
 	{
-		float x;
-		float y;
-		explicit inline Vector2(float x, float y)
+		float x, y;
+		explicit inline Vector2(const float x,const float y)
 		{
 			this->x = x;
 			this->y = y;
@@ -660,17 +874,9 @@ namespace ButiEngine {
 		inline ~Vector2() {}
 
 
-		inline  float* GetData()
+		inline const float* GetData()const
 		{
-			float output[2] = { x,y };
-			return output;
-		}
-		inline  void GetData(float* out)
-		{
-			auto data = GetData();
-			for (int i = 0; i < 2; i++) {
-				out[i] = data[i];
-			}
+			return &x;
 		}
 
 		inline Vector2& operator +=(const Vector2& other)
@@ -761,10 +967,10 @@ namespace ButiEngine {
 
 		inline const Vector2 operator -() const
 		{
-			return (*this) * -1;
+			return  (*this) * -1;
 		}
 
-		inline bool operator==(const Vector2& other)
+		inline bool operator==(const Vector2& other)const
 		{
 
 			return (x == other.x && y == other.y);
@@ -775,10 +981,21 @@ namespace ButiEngine {
 			return !(*this  == other);
 		}
 
+		inline float& operator [](const std::uint32_t idx)
+		{
+			return *(&x + idx);
+		}
+
+
+		inline float operator [](const std::uint32_t idx) const
+		{
+			return *(&x + idx);
+		}
 		inline operator Vector3() const;
 		inline operator Vector4() const;
 
-		inline Vector2& Floor(int len=1)
+
+		inline Vector2& Floor(const std::int32_t len=1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -790,7 +1007,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Vector2& Round(int len=1)
+		inline Vector2& Round(const std::int32_t len=1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -802,7 +1019,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Vector2& Ceil(int len=1)
+		inline Vector2& Ceil(const std::int32_t len=1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -814,7 +1031,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Vector2 GetRound(int len = 1)const
+		inline Vector2 GetRound(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -826,7 +1043,7 @@ namespace ButiEngine {
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
-		inline Vector2 GetFloor(int len = 1)const
+		inline Vector2 GetFloor(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -838,7 +1055,7 @@ namespace ButiEngine {
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
-		inline Vector2 GetCeil(int len = 1)const
+		inline Vector2 GetCeil(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -875,7 +1092,7 @@ namespace ButiEngine {
 			return std::sqrt(GetLengthSqr());
 		}
 
-		inline float GetDistance(Vector2& other) const {
+		inline float GetDistance(const Vector2& other) const {
 			auto i = std::sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
 			return i;
 		}
@@ -974,7 +1191,7 @@ namespace ButiEngine {
 		static Vector3 ZAxis;
 		static Vector3 Zero;
 
-		explicit inline Vector3(float x, float y, float z)
+		explicit inline Vector3(const float x,const float y,const float z)
 		{
 			this->x = x;
 			this->y = y;
@@ -986,7 +1203,7 @@ namespace ButiEngine {
 			this->y = other.y;
 			this->z = other.z;
 		}
-		inline Vector3(float v)
+		inline Vector3(const float v)
 		{
 			this->x = v;
 			this->y = v;
@@ -1007,12 +1224,6 @@ namespace ButiEngine {
 		{
 		}
 
-		inline  void GetData(float out[3])
-		{
-			out[0] = x;
-			out[1] = y;
-			out[2] = z;
-		}
 		inline const float* GetData_const()const
 		{
 			return &x;
@@ -1144,19 +1355,19 @@ namespace ButiEngine {
 			return !(*this == other);
 		}
 
-		inline float& operator [](const unsigned int idx)
+		inline float& operator [](const std::uint32_t idx)
 		{
 			return *(&x + idx);
 		}
 
 
-		inline float operator [](const unsigned int idx) const
+		inline float operator [](const std::uint32_t idx) const
 		{
 			return *(&x + idx);
 		}
 
 
-		inline Vector3& Floor(const int len=1)
+		inline Vector3& Floor(const std::int32_t len=1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -1169,7 +1380,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Vector3& Round(const int len=1)
+		inline Vector3& Round(const std::int32_t len=1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -1182,7 +1393,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Vector3& Ceil(const int len=1)
+		inline Vector3& Ceil(const std::int32_t len=1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -1196,7 +1407,7 @@ namespace ButiEngine {
 		}
 
 
-		inline Vector3 GetRound(const int len = 1)const
+		inline Vector3 GetRound(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -1209,7 +1420,7 @@ namespace ButiEngine {
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
-		inline Vector3 GetFloor(const int len = 1)const
+		inline Vector3 GetFloor(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -1222,7 +1433,7 @@ namespace ButiEngine {
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
-		inline Vector3 GetCeil(const int len = 1)const
+		inline Vector3 GetCeil(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -1511,14 +1722,14 @@ namespace ButiEngine {
 
 	struct Vector4 
 	{
-		explicit inline Vector4(float x, float y, float z, float w)
+		explicit inline Vector4(const float x,const float y,const float z,const float w)
 		{
 			this->x = x;
 			this->y = y;
 			this->z = z;
 			this->w = w;
 		}
-		explicit inline Vector4(const Vector3& xyz, float w)
+		explicit inline Vector4(const Vector3& xyz,const float w)
 		{
 			this->x = xyz.x;
 			this->y = xyz.y;
@@ -1564,40 +1775,40 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Vector4& operator +=(float value) {
+		inline Vector4& operator +=(const float value) {
 			*this = *this + value;
 			return *this;
 		};
 
-		inline Vector4& operator -=(float value)
+		inline Vector4& operator -=(const float value)
 		{
 			*this = *this - value;
 			return *this;
 		};
 
-		inline Vector4& operator *=(float value)
+		inline Vector4& operator *=(const float value)
 		{
 			*this = *this * value;
 			return *this;
 		}
 
-		inline Vector4& operator /=(float value)
+		inline Vector4& operator /=(const float value)
 		{
 			*this = *this / value;
 			return *this;
 		}
 
-		inline Vector4 operator +(float value)const {
+		inline Vector4 operator +(const float value)const {
 			return Vector4(this->x + value, this->y + value, this->z + value, this->w + value);
 		}
-		inline Vector4 operator -(float value)const
+		inline Vector4 operator -(const float value)const
 		{
 			return Vector4(this->x - value, this->y - value, this->z - value, this->w - value);
 		};
-		inline Vector4 operator *(float value)const {
+		inline Vector4 operator *(const float value)const {
 			return Vector4(this->x * value, this->y * value, this->z * value, this->w * value);
 		}
-		inline Vector4 operator /(float value)const
+		inline Vector4 operator /(const float value)const
 		{
 			return Vector4(this->x / value, this->y / value, this->z / value, this->w / value);
 		};
@@ -1637,16 +1848,19 @@ namespace ButiEngine {
 		inline bool operator==(const Vector4& other)const {
 			return this->x == other.x && this->y == other.y && this->z == other.z && this->w == other.w;
 		}
+		inline bool operator==(const std::int32_t other)const {
+			return this->x == other && this->y == other && this->z == other && this->w == other;
+		}
 
 		inline bool operator!=(const Vector4& other)const {
 			return !((*this) == other);
 		}
 
-		inline float& operator [](int idx)
+		inline float& operator [](std::int32_t idx)
 		{
 			return *(&x + idx);
 		}
-		inline float operator [](int idx) const
+		inline float operator [](std::int32_t idx) const
 		{
 			return *(&x + idx);
 		}
@@ -1658,7 +1872,7 @@ namespace ButiEngine {
 			return Vector2(x, y);
 		}
 
-		inline Vector4& Floor(int len = 1)
+		inline Vector4& Floor(const std::int32_t len = 1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -1671,7 +1885,7 @@ namespace ButiEngine {
 			*this /= (float)std::pow(10, len - 1);
 			return *this;
 		}
-		inline Vector4& Round(int len = 1)
+		inline Vector4& Round(const std::int32_t len = 1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -1684,7 +1898,7 @@ namespace ButiEngine {
 			*this /= (float)std::pow(10, len - 1);
 			return *this;
 		}
-		inline Vector4& Ceil(int len = 1)
+		inline Vector4& Ceil(const std::int32_t len = 1)
 		{
 			if (len <= 0) {
 				return *this;
@@ -1698,7 +1912,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Vector4 GetRound(int len = 1)const
+		inline Vector4 GetRound(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -1712,7 +1926,7 @@ namespace ButiEngine {
 			output /= (float)std::pow(10, len - 1);
 			return output;
 		}
-		inline Vector4 GetFloor(int len = 1)const
+		inline Vector4 GetFloor(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -1726,7 +1940,7 @@ namespace ButiEngine {
 			output /= (float)std::pow(10, len - 1);
 			return output;
 		}
-		inline Vector4 GetCeil(int len = 1)const
+		inline Vector4 GetCeil(const std::int32_t len = 1)const
 		{
 			if (len <= 0) {
 				return *this;
@@ -1909,12 +2123,12 @@ namespace ButiEngine {
 			Vector4(quat.x, quat.y, quat.z, quat.w)
 		{
 		}
-		explicit inline Quat(float x, float y, float z, float w) :
+		explicit inline Quat(const float x, const  float y, const  float z, const float w) :
 			Vector4(x, y, z, w)
 		{
 		}
 
-		explicit inline Quat(const Vector3& axis, float radians) :
+		explicit inline Quat(const Vector3& axis, const float radians) :
 			Vector4()
 		{
 			this->w = cos(radians * 0.5f);
@@ -1924,7 +2138,7 @@ namespace ButiEngine {
 			this->z = axis.z * sinedRad;
 		}
 
-		explicit  inline Quat(float val) :
+		explicit  inline Quat(const float val) :
 			Vector4()
 		{
 			x = val;
@@ -1966,13 +2180,13 @@ namespace ButiEngine {
 		}
 
 
-		inline float& operator [](int idx)
+		inline float& operator [](const std::int32_t idx)
 		{
 			return *(&x + idx);
 		}
 
 
-		inline float operator [](int idx) const
+		inline float operator [](const std::int32_t idx) const
 		{
 			return *(&x + idx);
 		}
@@ -1992,8 +2206,8 @@ namespace ButiEngine {
 		{
 			float px = this->x, py = this->y, pz = this->z, pw = this->w;
 			float qx = other.x, qy = other.y, qz = other.z, qw = other.w;
-			return Quat(qw*px -qz*py + qy*pz + qx*pw, qz*px + qw*py-qx*pz + qy*pw,
-				-qy*px + qx*py + qw*pz + qz*pw, -qx*px-qy*py-qz*pz + qw*pw);
+			return Quat(qw * px - qz * py + qy * pz + qx * pw, qz * px + qw * py - qx * pz + qy * pw,
+				-qy * px + qx * py + qw * pz + qz * pw, -qx * px - qy * py - qz * pz + qw * pw);
 		}
 		inline Quat operator /(const Quat& other) const
 		{
@@ -2010,7 +2224,7 @@ namespace ButiEngine {
 			this->x = (ax * bw + aw * bx + ay * bz - az * by);
 			this->y = (ay * bw + aw * by + az * bx - ax * bz);
 			this->z = (az * bw + aw * bz + ax * by - ay * bx);
-			this->w=(aw * bw - ax * bx - ay * by - az * bz);
+			this->w = (aw * bw - ax * bx - ay * by - az * bz);
 			return *this;
 		}
 		inline Quat& operator /=(const Quat& other) {
@@ -2023,20 +2237,20 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Quat operator *(float value) const
+		inline Quat operator *(const float value) const
 		{
 			return Quat(this->x * value, this->y * value, this->z * value, this->w * value);
 		}
-		inline Quat operator /(float value) const
+		inline Quat operator /(const float value) const
 		{
 			return Quat(this->x / value, this->y / value, this->z / value, this->w / value);
 		}
-		inline const Quat& operator *=(float value)
+		inline const Quat& operator *=(const float value)
 		{
 			*this = *this * value;
 			return *this;
 		}
-		inline const Quat& operator /=(float value)
+		inline const Quat& operator /=(const float value)
 		{
 			*this = *this / value;
 			return *this;
@@ -2054,7 +2268,7 @@ namespace ButiEngine {
 			return !((*this) == other);
 		}
 
-		inline const Quat& CreateFromAxisRotate(const Vector3& axis, const  float radians) {
+		inline const Quat& CreateFromAxisRotate(const Vector3& axis, const float radians) {
 			this->w = cos(radians * 0.5f);
 			float sinedRad = sin(radians * 0.5f);
 			this->x = axis.x * sinedRad;
@@ -2211,102 +2425,140 @@ namespace ButiEngine {
 			return *this;
 		}
 #endif
-		
+
 	};
 
 
-	static Vector2 operator* (float value, const Vector2& other) {
+	static Vector2 operator* (const float value, const Vector2& other) {
 		return Vector2(other.x * value, other.y * value);
 	}
-	static Vector3 operator* (float value, const Vector3& other) {
+	static Vector3 operator* (const float value, const Vector3& other) {
 		return Vector3(other.x * value, other.y * value, other.z * value);
 	}
-	static Vector4 operator* (float value, const Vector4& other) {
+	static Vector4 operator* (const float value, const Vector4& other) {
 		return Vector4(other.x * value, other.y * value, other.z * value, other.w * value);
 	}
-	static Quat operator* (float value, const Quat& other) {
+	static Quat operator* (const float value, const Quat& other) {
 		return Quat(other.x * value, other.y * value, other.z * value, other.w * value);
+	}
+	static Matrix4x4 operator* (const float value, const Matrix4x4& other) {
+		float v[]{ other._11 * value,other._12 * value ,other._13 * value ,other._14 * value,
+					other._21 * value,other._22 * value ,other._23 * value ,other._24 * value,
+					other._31 * value,other._32 * value ,other._33 * value ,other._34 * value,
+					other._41 * value,other._42 * value ,other._43 * value ,other._44 * value };
+		return Matrix4x4(v);
+	}
+	static Vector2 operator* (const std::int32_t value, const Vector2& other) {
+		return Vector2(other.x * value, other.y * value);
+	}
+	static Vector3 operator* (const std::int32_t value, const Vector3& other) {
+		return Vector3(other.x * value, other.y * value, other.z * value);
+	}
+	static Vector4 operator* (const std::int32_t value, const Vector4& other) {
+		return Vector4(other.x * value, other.y * value, other.z * value, other.w * value);
+	}
+	static Quat operator* (const std::int32_t value, const Quat& other) {
+		return Quat(other.x * value, other.y * value, other.z * value, other.w * value);
+	}
+	static Matrix4x4 operator* (const std::int32_t value, const Matrix4x4& other) {
+		float v[]{ other._11 * value,other._12 * value ,other._13 * value ,other._14 * value,
+					other._21 * value,other._22 * value ,other._23 * value ,other._24 * value,
+					other._31 * value,other._32 * value ,other._33 * value ,other._34 * value,
+					other._41 * value,other._42 * value ,other._43 * value ,other._44 * value };
+		return Matrix4x4(v);
 	}
 
 	namespace MathHelper
 	{
 
-		static  Matrix4x4 GetLookAtRotation(const Vector3& arg_lookPos,const Vector3& arg_targetPos, const Vector3& arg_upAxis) {
-			Vector3 z = ((Vector3)(arg_targetPos - arg_lookPos)).GetNormalize();
-			Vector3 x = arg_upAxis.GetCross(z).GetNormalize();
-			Vector3 y = z.GetCross(x).GetNormalize();
+	static  Matrix4x4 GetLookAtRotation(const Vector3& arg_lookPos, const Vector3& arg_targetPos, const Vector3& arg_upAxis) {
+		Vector3 z = ((Vector3)(arg_targetPos - arg_lookPos)).GetNormalize();
+		Vector3 x = arg_upAxis.GetCross(z).GetNormalize();
+		Vector3 y = z.GetCross(x).GetNormalize();
 
-			auto out = Matrix4x4();
-			out._11 = x.x; out._12 = x.y; out._13 = x.z;
-			out._21 = y.x; out._22 = y.y; out._23 = y.z;
-			out._31 = z.x; out._32 = z.y; out._33 = z.z;
+		auto out = Matrix4x4();
+		out._11 = x.x; out._12 = x.y; out._13 = x.z;
+		out._21 = y.x; out._22 = y.y; out._23 = y.z;
+		out._31 = z.x; out._32 = z.y; out._33 = z.z;
 
 
+		return out;
+	}
+
+
+	static Vector3 Slide(const Vector3& vec, const Vector3& normal)
+	{
+		float Len = vec.Dot(normal);
+		Vector3 Contact = normal * Len;
+		return (vec - Contact);
+	}
+
+
+
+	static Quat LearpQuat(const Quat& arg_firstQuat, const Quat& arg_secondQuat, const float pase) {
+		Quat secQ = arg_secondQuat;
+		if (arg_firstQuat.Dot(secQ) <= 0) {
+			secQ = -secQ;
+		}
+		Quat out = Quat();
+		const float len1 = arg_firstQuat.GetLength();
+		const float len2 = arg_firstQuat.GetLength();
+
+		if (len1 == 0.0f || len2 == 0.0f)
 			return out;
+
+		const float cos_val = (arg_firstQuat[0] * secQ[0] + arg_firstQuat[1] * secQ[1] + arg_firstQuat[2] * secQ[2] + arg_firstQuat[3] * secQ[3]) / (len1 * len2);
+
+
+		if (abs(cos_val - 1.0f) < 0.001) {
+			return arg_firstQuat;
 		}
+		const float w = acosf(cos_val);
+		const float sin_w = sinf(w);
+		const float sin_t_w = sinf(pase * w);
+		const float sin_inv_t_w = sinf((1.0f - pase) * w);
+		const float mult_q1 = sin_inv_t_w / sin_w;
+		const float mult_q2 = sin_t_w / sin_w;
 
 
-		static Vector3 Slide(const Vector3& vec, const Vector3& normal)
-		{
-			float Len = vec.Dot( normal);
-			Vector3 Contact = normal * Len;
-			return (vec - Contact);
+		for (std::int32_t i = 0; i < 4; i++)
+			out[i] = mult_q1 * arg_firstQuat[i] + mult_q2 * secQ[i];
+
+		return out;
+	}
+	static Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float t) {
+		return arg_startPoint + (arg_endPoint - arg_startPoint) * t;
+
+	}
+
+	static Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float xt, const float yt, const float zt) {
+		return Vector3(arg_startPoint.x + (arg_endPoint.x - arg_startPoint.x) * xt, arg_startPoint.y + (arg_endPoint.y - arg_startPoint.y) * yt, arg_startPoint.z + (arg_endPoint.z - arg_startPoint.z) * zt);
+
+	}
+
+	static Vector3 GetMobiusPoint(const float arg_time, const float arg_radius) {
+		Vector3 output;
+
+		output.x = -(arg_radius * cos(arg_time) + 2) * sin(2 * arg_time);
+		output.y = (arg_radius * cos(arg_time) + 2) * cos(2 * arg_time);
+		output.z = arg_radius * sin(arg_time);
+
+		return output;
+	}
+	static Vector3 GetMobiusNormal(const float arg_time, const float arg_radius) {
+		if (arg_radius == 0) {
+
+			Vector3 point1 = GetMobiusPoint(arg_time, arg_radius), point2 = GetMobiusPoint(arg_time, -1), point3 = GetMobiusPoint(arg_time + ToRadian(0.5f), arg_radius);
+
+			return (point2 - point1).GetCross(point3 - point1).GetNormalize();
 		}
+		else {
+			Vector3 point1 = GetMobiusPoint(arg_time, arg_radius), point2 = GetMobiusPoint(arg_time, 0), point3 = GetMobiusPoint(arg_time + ToRadian(0.5f), arg_radius);
 
-		
-
-		static Quat LearpQuat(const Quat& arg_firstQuat, const Quat& arg_secondQuat, const float pase) {
-			Quat secQ = arg_secondQuat;
-			if (arg_firstQuat.Dot(secQ) <= 0) {
-				secQ = -secQ;
-			}
-			Quat out = Quat();
-			const float len1 = arg_firstQuat.GetLength();
-			const float len2 = arg_firstQuat.GetLength();
-
-			if (len1 == 0.0f || len2 == 0.0f)
-				return out;
-
-			const float cos_val = (arg_firstQuat[0] * secQ[0] + arg_firstQuat[1] * secQ[1] + arg_firstQuat[2] * secQ[2] + arg_firstQuat[3] * secQ[3]) / (len1 * len2);
-
-
-			if (abs(cos_val - 1.0f) < 0.001) {
-				return arg_firstQuat;
-			}
-			const float w = acosf(cos_val);
-			const float sin_w = sinf(w);
-			const float sin_t_w = sinf(pase * w);
-			const float sin_inv_t_w = sinf((1.0f - pase) * w);
-			const float mult_q1 = sin_inv_t_w / sin_w;
-			const float mult_q2 = sin_t_w / sin_w;
-
-
-			for (int i = 0; i < 4; i++)
-				out[i] = mult_q1 * arg_firstQuat[i] + mult_q2 * secQ[i];
-
-			return out;
+			return (point2 - point1).GetCross(point3 - point1).GetNormalize();
 		}
-		static Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float t) {
-			return arg_startPoint + (arg_endPoint - arg_startPoint) * t;
-
-		}
-
-		static Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float xt, const float yt, const float zt) {
-			return Vector3(arg_startPoint.x + (arg_endPoint.x - arg_startPoint.x) * xt, arg_startPoint.y + (arg_endPoint.y - arg_startPoint.y) * yt, arg_startPoint.z + (arg_endPoint.z - arg_startPoint.z) * zt);
-
-		}
-
-		static Vector3 GetMobiusPoint(float arg_time, float arg_radius) {
-			Vector3 output;
-
-			output.x = -(arg_radius * cos(arg_time) + 2) * sin(2 * arg_time);
-			output.y = (arg_radius * cos(arg_time) + 2) * cos(2 * arg_time);
-			output.z = arg_radius * sin(arg_time);
-
-			return output;
-		}
-
-	};
+	}
+	}
 
 
 
@@ -2333,7 +2585,7 @@ namespace ButiEngine {
 		Line(const Vector3& p, const Vector3& v) :point(p), velocity(v) {}
 
 
-		inline virtual Vector3 GetPoint(float t) const {
+		inline virtual Vector3 GetPoint(const float t) const {
 			return point + velocity * t;
 		}
 
@@ -2354,7 +2606,7 @@ namespace ButiEngine {
 		inline Vector3 GetEndPoint() const {
 			return endPos;
 		}
-		inline Vector3 GetPoint(float t) const override {
+		inline Vector3 GetPoint(const float t) const override {
 			return point + (endPos - point) * t;
 		}
 		float Length()const {
@@ -2369,7 +2621,7 @@ namespace ButiEngine {
 	struct QuadraticBezierCurve {
 	public:
 		QuadraticBezierCurve(const Vector3& pointA, const Vector3& pointB, const Vector3& pointC) :lineAB(pointA, pointB), lineBC(pointB, pointC) {}
-		inline Vector3 GetPoint(float t) {
+		inline Vector3 GetPoint(const float t) {
 			quadratic.point = lineAB.GetPoint(t);
 			quadratic.endPos = lineBC.GetPoint(t);
 
@@ -2384,7 +2636,7 @@ namespace ButiEngine {
 	public:
 		CubicBezierCurve(const Vector3& pointA, const Vector3& pointB, const Vector3& pointC, const Vector3& pointD) :curveABC(pointA, pointB, pointC), curveBCD(pointB, pointC, pointD) {}
 
-		inline Vector3 GetPoint(float t) {
+		inline Vector3 GetPoint(const float t) {
 			cubic.point = curveABC.GetPoint(t);
 			cubic.endPos = curveBCD.GetPoint(t);
 
@@ -2416,7 +2668,7 @@ namespace ButiEngine {
 		inline Vector2 GetEndPoint() const {
 			return endPos;
 		}
-		inline Vector2 GetPoint(float t) const override {
+		inline Vector2 GetPoint(const float t) const override {
 			return point + (endPos - point) * t;
 		}
 		Vector2 endPos;
@@ -2426,7 +2678,7 @@ namespace ButiEngine {
 	public:
 		QuadraticBezierCurve2D() {}
 		QuadraticBezierCurve2D(const Vector2& pointA, const Vector2& pointB, const Vector2& pointC) :lineAB(pointA, pointB), lineBC(pointB, pointC) {}
-		inline Vector2 GetPoint(float t) {
+		inline Vector2 GetPoint(const float t) {
 			quadratic.point = lineAB.GetPoint(t);
 			quadratic.endPos = lineBC.GetPoint(t);
 
@@ -2445,18 +2697,18 @@ namespace ButiEngine {
 			curveBCD = QuadraticBezierCurve2D(pointB, pointC, pointD);
 		}
 
-		inline Vector2 GetPoint(float t) {
+		inline Vector2 GetPoint(const float t) {
 			cubic.point = curveABC.GetPoint(t);
 			cubic.endPos = curveBCD.GetPoint(t);
 
 			return cubic.GetPoint(t);
 		}
 
-		inline float GetDerivative(float t) {
+		inline float GetDerivative(const float t) {
 			return (3.0f * curveABC.lineAB.point.x * t + 2.0f * curveABC.lineAB.endPos.x) * t + curveABC.lineBC.endPos.x;
 		}
 
-		inline float GetYFromNuton(float x) {
+		inline float GetYFromNuton(const float x) {
 			float epsilon = 1e-5f; // è‡’l
 			float x2, t0, t1, t2, d2, i;
 			for (t2 = x, i = 0; i < 16; i++) {
@@ -2497,7 +2749,7 @@ namespace ButiEngine {
 			return  GetPoint(t2).y;
 		}
 
-		inline float GetYFromHalf(const float x, const char testCount = 12) {
+		inline float GetYFromHalf(const float x, const std::int8_t testCount = 12) {
 
 			Vector2 a = curveABC.lineBC.endPos;
 			Vector2 b = curveABC.lineAB.endPos;
@@ -2512,7 +2764,7 @@ namespace ButiEngine {
 
 			float epsilon = 0.0005f; // è‡’l
 
-			for (int i = 0; i < testCount; i++) {
+			for (std::int32_t i = 0; i < testCount; i++) {
 				auto ft = k0 * t * t * t + k1 * t * t + k2 * t - x;
 
 				if (ft <= epsilon && ft >= -epsilon) {
@@ -2534,7 +2786,7 @@ namespace ButiEngine {
 	struct SplineCurve {
 	public:
 		SplineCurve() {
-			for (int i = 0; i < 6; i++)
+			for (std::int32_t i = 0; i < 6; i++)
 				vec_points.push_back(Vector3(0, 0, 0));
 			Initialize();
 		}
@@ -2568,14 +2820,14 @@ namespace ButiEngine {
 
 		Vector3 GetPoint(float t) const{
 			{
-				UINT itr =(UINT) (t / unit);
+				std::uint32_t itr =(std::uint32_t) (t / unit);
 
 				if (itr >= vec_points.size() - 3) {
-					itr =(UINT) vec_points.size() - 4;
+					itr =(std::uint32_t) vec_points.size() - 4;
 				}
 
 
-				return CatmullRom((t - itr * unit) / unit, vec_points[itr], vec_points[(unsigned long long int)itr + 1], vec_points[(unsigned long long int)itr + 2], vec_points[(unsigned long long int)itr + 3]);
+				return CatmullRom((t - itr * unit) / unit, vec_points[itr], vec_points[(std::uint64_t)itr + 1], vec_points[(std::uint64_t)itr + 2], vec_points[(std::uint64_t)itr + 3]);
 
 			}
 			t += 0.01f;
@@ -2601,7 +2853,7 @@ namespace ButiEngine {
 		}
 
 	private:
-		static Vector3 CatmullRom(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3) {
+		static Vector3 CatmullRom(const float t,const Vector3& p0,const Vector3& p1,const Vector3& p2,const Vector3& p3) {
 			Vector3 a = -p0 + 3.0f * p1 - 3.0f * p2 + p3;
 			Vector3 b = 2.0f * p0 - 5.0f * p1 + 4.0f * p2 - p3;
 			Vector3 c = -p0 + p2;
@@ -2616,7 +2868,7 @@ namespace ButiEngine {
 
 	////////////////////////////////////////////////////
 
-	inline Vector4 ButiEngine::Matrix4x4::operator*(const Vector4& other)
+	inline Vector4 ButiEngine::Matrix4x4::operator*(const Vector4& other)const
 	{
 
 		Vector4 temp = Vector4(this->_11 * other.x + this->_21 * other.y + this->_31 * other.z + this->_41 * other.w,
@@ -2626,7 +2878,7 @@ namespace ButiEngine {
 		);
 		return temp;
 	}
-	inline Vector3 ButiEngine::Matrix4x4::operator*(const Vector3& other)
+	inline Vector3 ButiEngine::Matrix4x4::operator*(const Vector3& other) const
 	{
 
 		Vector3 temp = Vector3(this->_11 * other.x + this->_21 * other.y + this->_31 * other.z + this->_41,
@@ -2636,12 +2888,12 @@ namespace ButiEngine {
 		return temp;
 	}
 
-	inline Vector4& Matrix4x4::operator[](const unsigned int idx)
+	inline Vector4& Matrix4x4::operator[](const std::uint32_t idx)
 	{
 		return *((Vector4*) (&m[idx][0]));
 	}
 
-	inline Vector4 Matrix4x4::operator[](const unsigned int idx) const
+	inline Vector4 Matrix4x4::operator[](const std::uint32_t idx) const
 	{
 		return *((Vector4*)(&m[idx][0]));
 	}
@@ -2904,8 +3156,8 @@ namespace ButiEngine {
 		elem[2] = -this->_11 - this->_22 + this->_33 + 1.0f;
 		elem[3] = this->_11 + this->_22 + this->_33 + 1.0f;
 
-		unsigned biggestIndex = 0;
-		for (int i = 1; i < 4; i++) {
+		std::uint32_t  biggestIndex = 0;
+		for (std::int32_t i = 1; i < 4; i++) {
 			if (elem[i] > elem[biggestIndex])
 				biggestIndex = i;
 		}
@@ -3010,14 +3262,10 @@ namespace ButiEngine {
 
 	class Rectangle {
 	public:
-		float width;
-		float height;
-		float outerCircleRadius;
-		Vector2 position;
 		inline Rectangle() :width(0), height(0), position(Vector2()), outerCircleRadius(0) {};
-		inline Rectangle(float arg_width, float  arg_height, Vector2 arg_position) :width(arg_width), height(arg_height), position(arg_position), outerCircleRadius(GetRectangleOuterCircleRadius((int)width, (int)height)) {};
-		inline Rectangle(float arg_width, float  arg_height, Vector2 arg_position, float arg_outerCircleRadius) :width(arg_width), height(arg_height), position(arg_position), outerCircleRadius(arg_outerCircleRadius) {};
-		inline Rectangle(float arg_width, float  arg_height, float x, float y) :width(arg_width), height(arg_height), position(Vector2(x, y)), outerCircleRadius(GetRectangleOuterCircleRadius((int)width, (int)height)) {};
+		inline Rectangle(const float arg_width,const float  arg_height, const Vector2 arg_position) :width(arg_width), height(arg_height), position(arg_position), outerCircleRadius(GetRectangleOuterCircleRadius((std::int32_t)width, (std::int32_t)height)) {};
+		inline Rectangle(const float arg_width,const float  arg_height, const  Vector2 arg_position, const float arg_outerCircleRadius) :width(arg_width), height(arg_height), position(arg_position), outerCircleRadius(arg_outerCircleRadius) {};
+		inline Rectangle(const float arg_width,const float  arg_height, const  float x, const  float y) :width(arg_width), height(arg_height), position(Vector2(x, y)), outerCircleRadius(GetRectangleOuterCircleRadius((std::int32_t)width, (std::int32_t)height)) {};
 		inline std::vector< Point2D> GetVertecies()
 		{
 			std::vector<Point2D> out{
@@ -3031,7 +3279,7 @@ namespace ButiEngine {
 		}
 
 
-		inline bool IsContain(Point2D arg_point2D) {
+		inline bool IsContain(const Point2D& arg_point2D) {
 			if (arg_point2D.x >= position.x - width / 2 && arg_point2D.x <= position.x + width / 2
 				&& arg_point2D.y >= position.y - height / 2 && arg_point2D.y <= position.y + height / 2) {
 				return true;
@@ -3068,7 +3316,7 @@ namespace ButiEngine {
 
 			return position.x + width / 2;
 		}
-		inline static float GetRectangleOuterCircleRadius(const int width, const int height) {
+		inline static float GetRectangleOuterCircleRadius(const std::int32_t width, const std::int32_t height) {
 			auto aW = width; auto aH = height;
 			auto s = (aW + aH);
 			auto t = (s - aW) * (s - aH) * (s - aW) * (s - aH);
@@ -3085,6 +3333,10 @@ namespace ButiEngine {
 			auto output = std::sqrt(u / t) / 4;
 			return output;
 		}
+		float width;
+		float height;
+		float outerCircleRadius;
+		Vector2 position;
 	};
 
 
@@ -3108,6 +3360,327 @@ namespace ButiEngine {
 
 	void InputCereal(Line& v, const std::string& path);
 
+
+
+}
+
+namespace std {
+static std::string to_string(const bool arg_v) {
+	return arg_v ? "true" :"false";
+}
+static std::string to_string(const ButiEngine::Vector2& arg_v) {
+	return std::to_string(arg_v.x) + "," + std::to_string(arg_v.y);
+}
+static std::string to_string(const ButiEngine::Vector3& arg_v) {
+	return std::to_string(arg_v.x) + "," + std::to_string(arg_v.y) + "," + std::to_string(arg_v.z);
+}
+static std::string to_string(const ButiEngine::Vector4& arg_v) {
+	return std::to_string(arg_v.x) + "," + std::to_string(arg_v.y) + "," + std::to_string(arg_v.z) + "," + std::to_string(arg_v.w);
+}
+static std::string to_string(const ButiEngine::Quat& arg_v) {
+	return std::to_string(arg_v.x) + "," + std::to_string(arg_v.y) + "," + std::to_string(arg_v.z) + "," + std::to_string(arg_v.w);
+}
+static std::string to_string(const ButiEngine::Matrix4x4& arg_v) {
+	return std::to_string(arg_v._11) + "," + std::to_string(arg_v._12) + "," + std::to_string(arg_v._13) + "," + std::to_string(arg_v._14) + "," +
+		std::to_string(arg_v._21) + "," + std::to_string(arg_v._22) + "," + std::to_string(arg_v._23) + "," + std::to_string(arg_v._24) + "," +
+		std::to_string(arg_v._31) + "," + std::to_string(arg_v._32) + "," + std::to_string(arg_v._33) + "," + std::to_string(arg_v._34) + "," +
+		std::to_string(arg_v._41) + "," + std::to_string(arg_v._42) + "," + std::to_string(arg_v._43) + "," + std::to_string(arg_v._44);
+}
+static bool stob(const std::string& arg_v){
+	return arg_v=="true" ? true : false;
+}
+}
+
+namespace StrConvert {
+template <typename T>
+static T ConvertString(const std::string& arg_str) {
+
+
+
+	return T();
+}
+template <>
+static std::int32_t ConvertString(const std::string& arg_str) {
+
+	const char* _Ptr = arg_str.c_str();
+	char* _Eptr;
+	const std::int64_t _Ans = _CSTD strtol(_Ptr, &_Eptr, 10);
+
+	if (_Ptr == _Eptr) {
+		//–³Œø‚È•ÏŠ·
+		return 0;
+	}
+
+
+	return static_cast<std::int32_t>(_Ans);
+}
+template <>
+static std::int64_t ConvertString(const std::string& arg_str) {
+
+	const char* _Ptr = arg_str.c_str();
+	char* _Eptr;
+
+	const std::int64_t _Ans = _CSTD strtol(_Ptr, &_Eptr, 10);
+
+	if (_Ptr == _Eptr) {
+		//–³Œø‚È•ÏŠ·
+		return 0;
+	}
+
+
+	return static_cast<std::int64_t>(_Ans);
+}
+template <>
+static float ConvertString(const std::string& arg_str) {
+
+	const char* _Ptr = arg_str.c_str();
+	char* _Eptr;
+	const float _Ans = _CSTD strtof(_Ptr, &_Eptr);
+
+	if (_Ptr == _Eptr) {
+		//–³Œø‚È•ÏŠ·
+		return 0.00f;
+	}
+	return _Ans;
+}
+template <>
+static double ConvertString(const std::string& arg_str) {
+	std::int32_t& _Errno_ref = errno;
+	const char* _Ptr = arg_str.c_str();
+	char* _Eptr;
+	_Errno_ref = 0;
+	const double _Ans = _CSTD strtod(_Ptr, &_Eptr);
+
+	if (_Ptr == _Eptr) {
+		//–³Œø‚È•ÏŠ·
+		return 0.00;
+	}
+	return _Ans;
+}
+template <>
+static ButiEngine::Vector2 ConvertString(const std::string& arg_str) {
+	auto splited = std::vector<std::string>();
+	std::int32_t first = 0;
+	std::int32_t last = arg_str.find_first_of(",");
+	if (last == std::string::npos) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Vector2();
+	}
+	while (first < arg_str.size())
+	{
+		auto subString = arg_str.substr(first, last - first);
+		splited.push_back(subString);
+		first = last + 1;
+		last = arg_str.find_first_of(",", first);
+		if (last == std::string::npos) {
+			last = arg_str.size();
+		}
+	}
+	if (splited.size() < 2) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Vector2();
+	}
+
+
+	const char* _Ptr = arg_str.c_str();
+	char* _Eptr;
+
+	ButiEngine::Vector2 _Ans;
+
+	for (std::int32_t i = 0; i < 2; i++) {
+
+		_Ptr = splited[i].c_str();
+		_Eptr = nullptr;
+		float f = _CSTD strtof(_Ptr, &_Eptr);
+		if (_Ptr == _Eptr) {
+			//–³Œø‚È•ÏŠ·
+			return _Ans;
+		}
+		_Ans[i] = f;
+	}
+
+	return _Ans;
+}
+template <>
+static ButiEngine::Vector3 ConvertString(const std::string& arg_str) {
+	auto splited = std::vector<std::string>();
+	std::int32_t first = 0;
+	std::int32_t last = arg_str.find_first_of(",");
+	if (last == std::string::npos) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Vector3();
+	}
+	while (first < arg_str.size())
+	{
+		auto subString = arg_str.substr(first, last - first);
+		splited.push_back(subString);
+		first = last + 1;
+		last = arg_str.find_first_of(",", first);
+		if (last == std::string::npos) {
+			last = arg_str.size();
+		}
+	}
+	if (splited.size() < 3) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Vector3();
+	}
+
+
+	const char* _Ptr = arg_str.c_str();
+	char* _Eptr;
+
+	ButiEngine::Vector3 _Ans;
+
+	for (std::int32_t i = 0; i < 3; i++) {
+
+		_Ptr = splited[i].c_str();
+		_Eptr = nullptr;
+		float f = _CSTD strtof(_Ptr, &_Eptr);
+		if (_Ptr == _Eptr) {
+			//–³Œø‚È•ÏŠ·
+			return _Ans;
+		}
+		_Ans[i] = f;
+	}
+
+
+
+	return _Ans;
+}
+template <>
+static ButiEngine::Vector4 ConvertString(const std::string& arg_str) {
+	auto splited = std::vector<std::string>();
+	std::int32_t first = 0;
+	std::int32_t last = arg_str.find_first_of(",");
+	if (last == std::string::npos) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Vector4();
+	}
+	while (first < arg_str.size())
+	{
+		auto subString = arg_str.substr(first, last - first);
+		splited.push_back(subString);
+		first = last + 1;
+		last = arg_str.find_first_of(",", first);
+		if (last == std::string::npos) {
+			last = arg_str.size();
+		}
+	}
+	if (splited.size() < 4) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Vector4();
+	}
+
+
+	const char* _Ptr = arg_str.c_str();
+	char* _Eptr;
+
+	ButiEngine::Vector4 _Ans;
+
+	for (std::int32_t i = 0; i < 4; i++) {
+
+		_Ptr = splited[i].c_str();
+		_Eptr = nullptr;
+		float f = _CSTD strtof(_Ptr, &_Eptr);
+		if (_Ptr == _Eptr) {
+			//–³Œø‚È•ÏŠ·
+			return _Ans;
+		}
+		_Ans[i] = f;
+	}
+
+
+	return _Ans;
+}
+template <>
+static ButiEngine::Quat ConvertString(const std::string& arg_str) {
+	auto splited = std::vector<std::string>();
+	std::int32_t first = 0;
+	std::int32_t last = arg_str.find_first_of(",");
+	if (last == std::string::npos) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Quat();
+	}
+	while (first < arg_str.size())
+	{
+		auto subString = arg_str.substr(first, last - first);
+		splited.push_back(subString);
+		first = last + 1;
+		last = arg_str.find_first_of(",", first);
+		if (last == std::string::npos) {
+			last = arg_str.size();
+		}
+	}
+	if (splited.size() < 4) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Quat();
+	}
+
+
+	const char* _Ptr = arg_str.c_str();
+	char* _Eptr;
+
+	ButiEngine::Quat _Ans;
+
+	for (std::int32_t i = 0; i < 2; i++) {
+
+		_Ptr = splited[i].c_str();
+		_Eptr = nullptr;
+		float f = _CSTD strtof(_Ptr, &_Eptr);
+		if (_Ptr == _Eptr) {
+			//–³Œø‚È•ÏŠ·
+			return _Ans;
+		}
+		_Ans[i] = f;
+	}
+
+
+	return _Ans;
+}
+template <>
+static ButiEngine::Matrix4x4 ConvertString(const std::string& arg_str) {
+
+	auto splited = std::vector<std::string>();
+	std::int32_t first = 0;
+	std::int32_t last = arg_str.find_first_of(",");
+	if (last == std::string::npos) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Matrix4x4();
+	}
+	while (first < arg_str.size())
+	{
+		auto subString = arg_str.substr(first, last - first);
+		splited.push_back(subString);
+		first = last + 1;
+		last = arg_str.find_first_of(",", first);
+		if (last == std::string::npos) {
+			last = arg_str.size();
+		}
+	}
+	if (splited.size() < 16) {
+		//–³Œø‚È•ÏŠ·
+		return ButiEngine::Matrix4x4();
+	}
+	ButiEngine::Matrix4x4 _Ans;
+	for (std::int32_t i = 0; i < 4; i++) {
+		for (std::int32_t j = 0; j < 4; j++) {
+
+			std::int32_t& _Errno_ref = errno;
+			const char* _Ptr = splited[i * 4 + j].c_str();
+			char* _Eptr;
+			_Errno_ref = 0;
+			float f = _CSTD strtof(_Ptr, &_Eptr);
+			if (_Ptr == _Eptr) {
+				//–³Œø‚È•ÏŠ·
+				return _Ans;
+			}
+			_Ans[i][j] = f;
+		}
+	}
+
+
+	return _Ans;
+}
 
 
 }
