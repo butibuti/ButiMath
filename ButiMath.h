@@ -1,7 +1,7 @@
 #pragma once
 #ifndef BUTI_MATH_H
 #define BUTI_MATH_H
-
+#include<cmath>
 
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
@@ -21,7 +21,7 @@ namespace ButiEngine
 	constexpr std::int8_t BM_CHAR_MAX = 127;
 	constexpr std::int16_t BM_SHORT_MAX = 32767;
 	constexpr std::int32_t BM_INT_MAX = 2147483647;
-	constexpr std::uint8_t BM_UCHAR_MAX = 256;
+	constexpr std::uint8_t BM_UCHAR_MAX = 255;
 	constexpr std::uint16_t BM_USHORT_MAX = 65535;
 	constexpr std::uint32_t BM_UINT_MAX = 4294967295;
 
@@ -129,6 +129,15 @@ namespace ButiEngine
 				return 4;
 			}
 			return 8;
+		}
+
+		template<typename T>
+		constexpr T Clamp(const T arg_v, const T arg_min, const T arg_max) {
+			return max(min(arg_max, arg_v), arg_min);
+		}
+		template<std::int32_t Min,std::int32_t Max, typename T>
+		constexpr T Clamp(const T arg_v) {
+			return max(min(Max, arg_v), Min);
 		}
 	}
 	struct Vector2;
@@ -583,7 +592,8 @@ namespace ButiEngine
 			return true;
 		}
 
-		inline Vector3 GetPosition()const;
+		inline void SetPosition(const Vector3& arg_pos);
+		inline const Vector3& GetPosition()const;
 		inline Vector3 GetPosition_Transpose()const;
 		inline void PositionFloor();
 		inline Matrix4x4 GetPositionFloor()const;
@@ -602,7 +612,8 @@ namespace ButiEngine
 		inline Matrix4x4 GetPositionYZFloor_transpose()const;
 		inline Matrix4x4 GetPositionXZFloor_transpose()const;
 		inline Matrix4x4 GetOnlyRotation_transpose()const;
-		inline void RemovePosition();
+		inline Matrix4x4& RemovePosition();
+		inline Matrix4x4 GetRemovePosition()const;
 		static inline Matrix4x4 Translate(const Vector3& arg_position);
 		static inline Matrix4x4 Scale(const Vector3& arg_scale);
 
@@ -1001,8 +1012,8 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float) std::pow(10, len - 1);
-			x = std::floor(x);
-			y = std::floor(y);
+			x = __floorf(x);
+			y = __floorf(y);
 			*this /= (float) std::pow(10, len - 1);
 			return *this;
 		}
@@ -1013,8 +1024,8 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float) std::pow(10, len - 1);
-			x = std::round(x);
-			y = std::round(y);
+			x = __roundf(x);
+			y = __roundf(y);
 			*this /= (float) std::pow(10, len - 1);
 			return *this;
 		}
@@ -1025,8 +1036,8 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float) std::pow(10, len - 1);
-			x = std::ceil(x);
-			y = std::ceil(y);
+			x = __ceilf(x);
+			y = __ceilf(y);
 			*this /= (float) std::pow(10, len - 1);
 			return *this;
 		}
@@ -1038,8 +1049,8 @@ namespace ButiEngine
 			}
 			Vector2 output;
 			output *= (float) std::pow(10, len - 1);
-			output.x = std::round(x);
-			output.y = std::round(y);
+			output.x = __roundf(x);
+			output.y = __roundf(y);
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
@@ -1050,8 +1061,8 @@ namespace ButiEngine
 			}
 			Vector2 output;
 			output *= (float) std::pow(10, len - 1);
-			output.x = std::floor(x);
-			output.y = std::floor(y);
+			output.x = __floorf(x);
+			output.y = __floorf(y);
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
@@ -1062,8 +1073,8 @@ namespace ButiEngine
 			}
 			Vector2 output;
 			output *= (float) std::pow(10, len - 1);
-			output.x = std::ceil(x);
-			output.y = std::ceil(y);
+			output.x = __ceilf(x);
+			output.y = __ceilf(y);
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
@@ -1373,9 +1384,9 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float) std::pow(10, len - 1);
-			x = std::floor(x);
-			y = std::floor(y);
-			z = std::floor(z);
+			x = __floorf(x);
+			y = __floorf(y);
+			z = __floorf(z);
 			*this /= (float) std::pow(10, len - 1);
 			return *this;
 		}
@@ -1386,9 +1397,9 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float) std::pow( 10,len-1);
-			x = std::round(x);
-			y = std::round(y);
-			z = std::round(z);
+			x = __roundf(x);
+			y = __roundf(y);
+			z = __roundf(z);
 			*this /= (float) std::pow(10, len - 1);
 			return *this;
 		}
@@ -1399,9 +1410,9 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float) std::pow(10, len - 1);
-			x= std::ceil(x);
-			y=std::ceil(y);
-			z=std::ceil(z);
+			x= __ceilf(x);
+			y=__ceilf(y);
+			z=__ceilf(z);
 			*this /= (float) std::pow(10, len - 1);
 			return *this;
 		}
@@ -1414,9 +1425,9 @@ namespace ButiEngine
 			}
 			Vector3 output;
 			output *= (float) std::pow(10, len - 1);
-			output.x = std::round(x);
-			output.y = std::round(y);
-			output.z = std::round(z);
+			output.x = __roundf(x);
+			output.y = __roundf(y);
+			output.z = __roundf(z);
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
@@ -1427,9 +1438,9 @@ namespace ButiEngine
 			}
 			Vector3 output;
 			output *= (float) std::pow(10, len - 1);
-			output.x = std::floor(x);
-			output.y = std::floor(y);
-			output.z = std::floor(z);
+			output.x = __floorf(x);
+			output.y = __floorf(y);
+			output.z = __floorf(z);
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
@@ -1440,9 +1451,9 @@ namespace ButiEngine
 			}
 			Vector3 output;
 			output *= (float) std::pow(10, len - 1);
-			output.x = std::ceil(x);
-			output.y = std::ceil(y);
-			output.z = std::ceil(z);
+			output.x = __ceilf(x);
+			output.y = __ceilf(y);
+			output.z = __ceilf(z);
 			output /= (float) std::pow(10, len - 1);
 			return output;
 		}
@@ -1878,10 +1889,10 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float)std::pow(10, len - 1);
-			x = std::floor(x);
-			y = std::floor(y);
-			z = std::floor(z);
-			w = std::floor(w);
+			x = __floorf(x);
+			y = __floorf(y);
+			z = __floorf(z);
+			w = __floorf(w);
 			*this /= (float)std::pow(10, len - 1);
 			return *this;
 		}
@@ -1891,10 +1902,10 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float)std::pow(10, len - 1);
-			x = std::round(x);
-			y = std::round(y);
-			z = std::round(z);
-			w = std::round(w);
+			x = __roundf(x);
+			y = __roundf(y);
+			z = __roundf(z);
+			w = __roundf(w);
 			*this /= (float)std::pow(10, len - 1);
 			return *this;
 		}
@@ -1904,10 +1915,10 @@ namespace ButiEngine
 				return *this;
 			}
 			*this *= (float)std::pow(10, len - 1);
-			x = std::ceil(x);
-			y = std::ceil(y);
-			z = std::ceil(z);
-			w = std::ceil(w);
+			x = __ceilf(x);
+			y = __ceilf(y);
+			z = __ceilf(z);
+			w = __ceilf(w);
 			*this /= (float)std::pow(10, len - 1);
 			return *this;
 		}
@@ -1919,10 +1930,10 @@ namespace ButiEngine
 			}
 			Vector4 output;
 			output *= (float)std::pow(10, len - 1);
-			output.x = std::round(x);
-			output.y = std::round(y);
-			output.z = std::round(z);
-			output.w = std::round(w);
+			output.x = __roundf(x);
+			output.y = __roundf(y);
+			output.z = __roundf(z);
+			output.w = __roundf(w);
 			output /= (float)std::pow(10, len - 1);
 			return output;
 		}
@@ -1933,10 +1944,10 @@ namespace ButiEngine
 			}
 			Vector4 output;
 			output *= (float)std::pow(10, len - 1);
-			output.x = std::floor(x);
-			output.y = std::floor(y);
-			output.z = std::floor(z);
-			output.w = std::floor(w);
+			output.x = __floorf(x);
+			output.y = __floorf(y);
+			output.z = __floorf(z);
+			output.w = __floorf(w);
 			output /= (float)std::pow(10, len - 1);
 			return output;
 		}
@@ -1947,10 +1958,10 @@ namespace ButiEngine
 			}
 			Vector4 output;
 			output *= (float)std::pow(10, len - 1);
-			output.x = std::ceil(x);
-			output.y = std::ceil(y);
-			output.z = std::ceil(z);
-			output.w = std::ceil(w);
+			output.x = __ceilf(x);
+			output.y = __ceilf(y);
+			output.z = __ceilf(z);
+			output.w = __ceilf(w);
 			output /= (float)std::pow(10, len - 1);
 			return output;
 		}
@@ -2526,12 +2537,12 @@ namespace ButiEngine
 
 		return out;
 	}
-	static Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float t) {
+	static Vector3 LerpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float t) {
 		return arg_startPoint + (arg_endPoint - arg_startPoint) * t;
 
 	}
 
-	static Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float xt, const float yt, const float zt) {
+	static Vector3 LerpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float xt, const float yt, const float zt) {
 		return Vector3(arg_startPoint.x + (arg_endPoint.x - arg_startPoint.x) * xt, arg_startPoint.y + (arg_endPoint.y - arg_startPoint.y) * yt, arg_startPoint.z + (arg_endPoint.z - arg_startPoint.z) * zt);
 
 	}
@@ -2797,8 +2808,9 @@ namespace ButiEngine
 		SplineCurve(Vector3 start, Vector3 end, const std::vector<Vector3>& arg_vec_points) {
 			vec_points.push_back(start);
 			vec_points.push_back(start);
-
-			std::copy(arg_vec_points.begin(), arg_vec_points.end(), std::back_inserter(vec_points));
+			for (auto& arg_p : arg_vec_points) {
+				vec_points.push_back(arg_p);
+			}
 
 			vec_points.push_back(end);
 			vec_points.push_back(end);
@@ -2807,9 +2819,9 @@ namespace ButiEngine
 		SplineCurve(Vector3 startAndEnd, std::vector<Vector3> arg_vec_points) {
 			vec_points.push_back(startAndEnd);
 			vec_points.push_back(startAndEnd);
-
-			std::copy(arg_vec_points.begin(), arg_vec_points.end(), std::back_inserter(vec_points));
-
+			for (auto& arg_p : arg_vec_points) {
+				vec_points.push_back(arg_p);
+			}
 			vec_points.push_back(startAndEnd);
 			vec_points.push_back(startAndEnd);
 			Initialize();
@@ -2945,9 +2957,15 @@ namespace ButiEngine
 			_44 = 1.0f;
 		}
 	}
-	inline ButiEngine::Vector3 ButiEngine::Matrix4x4::GetPosition()const
+	inline void ButiEngine::Matrix4x4::SetPosition(const Vector3& arg_pos)
 	{
-		return Vector3(_41, _42, _43);
+		_41 = arg_pos.x;
+		_42 = arg_pos.y;
+		_43 = arg_pos.z;
+	}
+	inline const ButiEngine::Vector3& ButiEngine::Matrix4x4::GetPosition()const
+	{
+		return *reinterpret_cast<const Vector3*>(&_41);
 	}
 	inline ButiEngine::Vector3 ButiEngine::Matrix4x4::GetPosition_Transpose()const
 	{
@@ -3125,11 +3143,20 @@ namespace ButiEngine
 
 		return output;
 	}
-	inline void  ButiEngine::Matrix4x4::RemovePosition()
+	inline Matrix4x4&  ButiEngine::Matrix4x4::RemovePosition()
 	{
 		_41 = 0;
 		_42 = 0;
 		_43 = 0;
+		return *this;
+	}
+	inline Matrix4x4 Matrix4x4::GetRemovePosition() const
+	{
+		auto output = *this;
+		output._41 = 0;
+		output._42 = 0;
+		output._43 = 0;
+		return output;
 	}
 	inline Matrix4x4 ButiEngine::Matrix4x4::Translate(const Vector3& arg_position)
 	{
@@ -3260,85 +3287,6 @@ namespace ButiEngine
 	using Color=Vector4 ;
 	using Point2D=Vector2;
 
-	class Rectangle {
-	public:
-		inline Rectangle() :width(0), height(0), position(Vector2()), outerCircleRadius(0) {};
-		inline Rectangle(const float arg_width,const float  arg_height, const Vector2 arg_position) :width(arg_width), height(arg_height), position(arg_position), outerCircleRadius(GetRectangleOuterCircleRadius((std::int32_t)width, (std::int32_t)height)) {};
-		inline Rectangle(const float arg_width,const float  arg_height, const  Vector2 arg_position, const float arg_outerCircleRadius) :width(arg_width), height(arg_height), position(arg_position), outerCircleRadius(arg_outerCircleRadius) {};
-		inline Rectangle(const float arg_width,const float  arg_height, const  float x, const  float y) :width(arg_width), height(arg_height), position(Vector2(x, y)), outerCircleRadius(GetRectangleOuterCircleRadius((std::int32_t)width, (std::int32_t)height)) {};
-		inline std::vector< Point2D> GetVertecies()
-		{
-			std::vector<Point2D> out{
-				   Point2D(position.x - width / 2, position.y - height / 2),
-				   Point2D(position.x + width / 2, position.y - height / 2),
-				   Point2D(position.x + width / 2, position.y + height / 2),
-				   Point2D(position.x - width / 2, position.y + height / 2)
-			};
-
-			return out;
-		}
-
-
-		inline bool IsContain(const Point2D& arg_point2D) {
-			if (arg_point2D.x >= position.x - width / 2 && arg_point2D.x <= position.x + width / 2
-				&& arg_point2D.y >= position.y - height / 2 && arg_point2D.y <= position.y + height / 2) {
-				return true;
-			}
-			return false;
-		}
-		inline bool IsIntersects(std::shared_ptr< Rectangle> other) {
-
-			/*auto d = other->position.GetDistance(position);
-			if (other->position.GetDistance(position) > other->outerCircleRadius + outerCircleRadius) {
-				return false;
-			}*/
-			auto otherVertecies = other->GetVertecies();
-			for (auto i = 0; i < 4; i++)
-			{
-				if (IsContain(otherVertecies.at(i))) {
-					return true;
-				}
-			}
-			return false;
-		}
-		inline float GetTop() {
-
-			return position.y - height / 2;
-		}
-		inline float GetBottom() {
-
-			return position.y + height / 2;
-		}
-		inline float GetLeft() {
-			return position.x - width / 2;
-		}
-		inline float GetRight() {
-
-			return position.x + width / 2;
-		}
-		inline static float GetRectangleOuterCircleRadius(const std::int32_t width, const std::int32_t height) {
-			auto aW = width; auto aH = height;
-			auto s = (aW + aH);
-			auto t = (s - aW) * (s - aH) * (s - aW) * (s - aH);
-			auto u = (aW * aH * 2) * (aW * aH * 2) * (aW * aW + aH * aH);
-
-
-			auto output = std::sqrt(u / t) / 4;
-			return (float)output;
-		}
-		inline static float GetRectangleOuterCircleRadius(const Rectangle& ref_rect) {
-			auto s = (ref_rect.width + ref_rect.height);
-			auto t = (s - ref_rect.width) * (s - ref_rect.height) * (s - ref_rect.width) * (s - ref_rect.height);
-			auto u = (ref_rect.width * ref_rect.height * 2) * (ref_rect.width * ref_rect.height * 2) * (ref_rect.width * ref_rect.width + ref_rect.height * ref_rect.height);
-			auto output = std::sqrt(u / t) / 4;
-			return output;
-		}
-		float width;
-		float height;
-		float outerCircleRadius;
-		Vector2 position;
-	};
-
 
 	void OutputCereal(const Vector2& v, const std::string& path);
 
@@ -3365,28 +3313,28 @@ namespace ButiEngine
 }
 
 namespace std {
-static std::string to_string(const bool arg_v) {
+inline std::string to_string(const bool arg_v) {
 	return arg_v ? "true" :"false";
 }
-static std::string to_string(const ButiEngine::Vector2& arg_v) {
+inline std::string to_string(const ButiEngine::Vector2& arg_v) {
 	return std::to_string(arg_v.x) + "," + std::to_string(arg_v.y);
 }
-static std::string to_string(const ButiEngine::Vector3& arg_v) {
+inline std::string to_string(const ButiEngine::Vector3& arg_v) {
 	return std::to_string(arg_v.x) + "," + std::to_string(arg_v.y) + "," + std::to_string(arg_v.z);
 }
-static std::string to_string(const ButiEngine::Vector4& arg_v) {
+inline std::string to_string(const ButiEngine::Vector4& arg_v) {
 	return std::to_string(arg_v.x) + "," + std::to_string(arg_v.y) + "," + std::to_string(arg_v.z) + "," + std::to_string(arg_v.w);
 }
-static std::string to_string(const ButiEngine::Quat& arg_v) {
+inline std::string to_string(const ButiEngine::Quat& arg_v) {
 	return std::to_string(arg_v.x) + "," + std::to_string(arg_v.y) + "," + std::to_string(arg_v.z) + "," + std::to_string(arg_v.w);
 }
-static std::string to_string(const ButiEngine::Matrix4x4& arg_v) {
+inline std::string to_string(const ButiEngine::Matrix4x4& arg_v) {
 	return std::to_string(arg_v._11) + "," + std::to_string(arg_v._12) + "," + std::to_string(arg_v._13) + "," + std::to_string(arg_v._14) + "," +
 		std::to_string(arg_v._21) + "," + std::to_string(arg_v._22) + "," + std::to_string(arg_v._23) + "," + std::to_string(arg_v._24) + "," +
 		std::to_string(arg_v._31) + "," + std::to_string(arg_v._32) + "," + std::to_string(arg_v._33) + "," + std::to_string(arg_v._34) + "," +
 		std::to_string(arg_v._41) + "," + std::to_string(arg_v._42) + "," + std::to_string(arg_v._43) + "," + std::to_string(arg_v._44);
 }
-static bool stob(const std::string& arg_v){
+inline bool stob(const std::string& arg_v){
 	return arg_v=="true" ? true : false;
 }
 }
@@ -3394,9 +3342,6 @@ static bool stob(const std::string& arg_v){
 namespace StrConvert {
 template <typename T>
 static T ConvertString(const std::string& arg_str) {
-
-
-
 	return T();
 }
 template <>
