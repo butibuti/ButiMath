@@ -862,30 +862,20 @@ namespace ButiEngine
 
 	struct Vector2 
 	{
-		float x, y;
-		explicit inline Vector2(const float x,const float y)
-		{
-			this->x = x;
-			this->y = y;
-		}
+		explicit constexpr inline Vector2(const float arg_x,const float arg_y):x(arg_x),y(arg_y){}
 
-		explicit inline Vector2() {
-			this->x = 0;
-			this->y = 0;
-		}
-		inline Vector2(const Vector2& other) {
-			this->x = other.x;
-			this->y = other.y;
-		}
-		inline Vector2(const float value) {
-			this->x = value;
-			this->y = value;
-		}
+		explicit constexpr inline Vector2():x(0),y(0) {}
+		constexpr inline Vector2(const Vector2& arg_other): x(arg_other.x) , y(arg_other.y) {}
+		constexpr inline Vector2(const float arg_value):x(arg_value),y(arg_value) {}
 
 		inline ~Vector2() {}
 
 
 		inline const float* GetData()const
+		{
+			return &x;
+		}
+		inline float* GetData()
 		{
 			return &x;
 		}
@@ -1193,49 +1183,25 @@ namespace ButiEngine
 #endif
 
 
+		float x, y;
 	};
 
 	struct  Vector3 
 	{
-		static Vector3 XAxis;
-		static Vector3 YAxis;
-		static Vector3 ZAxis;
-		static Vector3 Zero;
 
-		explicit inline Vector3(const float x,const float y,const float z)
-		{
-			this->x = x;
-			this->y = y;
-			this->z = z;
-		}
-		inline Vector3(const Vector3& other)
-		{
-			this->x = other.x;
-			this->y = other.y;
-			this->z = other.z;
-		}
-		inline Vector3(const float v)
-		{
-			this->x = v;
-			this->y = v;
-			this->z = v;
-		}
-		inline Vector3()
-		{
-			x = 0;
-			y = 0;
-			z = 0;
-		}
+		explicit constexpr inline Vector3(const float arg_x,const float arg_y,const float arg_z):x(arg_x),y(arg_y),z(arg_z){}
+		constexpr inline Vector3(const Vector3& arg_other) : x(arg_other.x), y(arg_other.y), z(arg_other.z) {}
+		constexpr inline Vector3(const Vector2& arg_xy,const float arg_z): x(arg_xy.x), y(arg_xy.y), z(arg_z){}
+		constexpr inline Vector3(const float arg_v) : x(arg_v) ,y(arg_v), z(arg_v){}
+		constexpr inline Vector3():x(0),y(0),z(0){}
 
-		inline Vector2 GetVector2() {
+		inline Vector2 GetVector2() const{
 			return Vector2(x, y);
 		}
 
-		inline ~Vector3()
-		{
-		}
+		inline ~Vector3(){}
 
-		inline const float* GetData_const()const
+		inline const float* GetData()const
 		{
 			return &x;
 		}
@@ -1729,38 +1695,23 @@ namespace ButiEngine
 
 
 		float x, y, z;
-	};
 
+	};
+	namespace Vector3Const {
+	static const Vector3 XAxis = Vector3(1.0f, 0, 0);
+	static const Vector3 YAxis = Vector3(0, 1.0f, 0);
+	static const Vector3 ZAxis = Vector3(0, 0, 1.0f);
+	static const Vector3 Zero = Vector3();
+	}
 	struct Vector4 
 	{
-		explicit inline Vector4(const float x,const float y,const float z,const float w)
-		{
-			this->x = x;
-			this->y = y;
-			this->z = z;
-			this->w = w;
-		}
-		explicit inline Vector4(const Vector3& xyz,const float w)
-		{
-			this->x = xyz.x;
-			this->y = xyz.y;
-			this->z = xyz.z;
-			this->w = w;
-		}
-		inline Vector4(const Vector4& other)
-		{
-			this->x = other.x;
-			this->y = other.y;
-			this->z = other.z;
-			this->w = other.w;
-		}
+		explicit constexpr inline Vector4(const float arg_x,const float arg_y,const float arg_z,const float arg_w):x(arg_x),y(arg_y),z(arg_z),w(arg_w){}
+		explicit constexpr inline Vector4(const Vector3& arg_xyz,const float arg_w):x(arg_xyz.x),y(arg_xyz.y),z(arg_xyz.z),w(arg_w){}
+		constexpr inline Vector4(const Vector4& arg_other) : x(arg_other.x), y(arg_other.y), z(arg_other.z), w(arg_other.w){}
 
-		inline Vector4()
-		{
-			x = 0;y = 0;z = 0;w = 0;
-		}
+		inline constexpr Vector4():x(0.0f),y(0.0f),z(0.0f),w(0.0f){}
 
-		inline  float* GetData() 
+		inline constexpr  float* GetData()
 		{			
 			return &(this->x);
 		}
@@ -2439,6 +2390,116 @@ namespace ButiEngine
 
 	};
 
+	using Color = Vector4;
+	namespace ButiColor {
+	enum class ColorIndex :std::uint8_t {
+		Red,
+		Green,
+		Blue,
+		Black,
+		White,
+		Grey,
+		Pink,
+		Purple,
+		DeepPurple,
+		Indigo,
+		LightBlue,
+		Cyan,
+		Teal,
+		LightGreen,
+		Lime,
+		Yellow,
+		Amber,
+		Orange,
+		DeepOrange,
+		Brown,
+		ColorIndexMax
+	};
+	enum class ShadeIndex :std::uint8_t{
+		Shade_0,
+		Shade_1,
+		Shade_2,
+		Shade_3,
+		Shade_4,
+		Shade_5,
+		Shade_6,
+		Shade_7,
+		Shade_8,
+		Shade_9,
+		ShadeIndexMax,
+		Shade_Half = Shade_5,
+		Shader_Light=Shade_2,
+		Shade_Dark=Shade_8,
+	};
+#define COL_DEF( r, g, b,alpha)  Color(static_cast<float>(r) / 255.0f, static_cast<float>(g)/ 255.0f, static_cast<float>(b)/ 255.0f, 1.0f)
+	static const Color Colors[static_cast<std::uint8_t>( ColorIndex::ColorIndexMax)][static_cast<std::uint8_t>( ShadeIndex::ShadeIndexMax)] = {
+		//Red
+		{ COL_DEF(0xFF, 0xEB, 0xEE),COL_DEF(0xFF, 0xCD, 0xD2),COL_DEF(0xEF, 0x9A, 0x9A),COL_DEF(0xE5, 0x73, 0x73),COL_DEF(0xEF, 0x53, 0x50),COL_DEF(0xF4, 0x43, 0x36),COL_DEF(0xE5, 0x39, 0x35),COL_DEF(0xD3, 0x2F, 0x2F),COL_DEF(0xC6, 0x28, 0x28),COL_DEF(0xB7, 0x1C, 0x1C) },
+		//Green
+		{ COL_DEF(0xE8, 0xF5, 0xE9),COL_DEF(0xC8, 0xE6, 0xC9),COL_DEF(0xA5, 0xD6, 0xA7),COL_DEF(0x81, 0xC7, 0x84),COL_DEF(0x66, 0xBB, 0x6A),COL_DEF(0x4C, 0xAF, 0x50),COL_DEF(0x43, 0xA0, 0x47),COL_DEF(0x38, 0x8E, 0x3C),COL_DEF(0x2E, 0x7D, 0x32),COL_DEF(0x1B, 0x5E, 0x20) }, 
+		//Blue
+		{COL_DEF(0xE3, 0xF2, 0xFD),COL_DEF(0xBB, 0xDE, 0xFB),COL_DEF(0x90, 0xCA, 0xF9),COL_DEF(0x64, 0xB5, 0xF6),COL_DEF(0x42, 0xA5, 0xF5),COL_DEF(0x21, 0x96, 0xF3),COL_DEF(0x1E, 0x88, 0xE5),COL_DEF(0x19, 0x76, 0xD2),COL_DEF(0x15, 0x65, 0xC0),COL_DEF(0x0D, 0x47, 0xA1)},
+		//BLack
+		{COL_DEF(0, 0, 0),COL_DEF(0, 0, 0),COL_DEF(0, 0, 0),COL_DEF(0, 0, 0),COL_DEF(0, 0, 0),COL_DEF(0, 0, 0),COL_DEF(0, 0, 0),COL_DEF(0, 0, 0),COL_DEF(0,0, 0),COL_DEF(0, 0, 0)},
+		//White
+		{COL_DEF(1, 1, 1),COL_DEF(1, 1, 1),COL_DEF(1, 1, 1),COL_DEF(1, 1, 1),COL_DEF(1, 1, 1),COL_DEF(1, 1, 1),COL_DEF(1, 1, 1),COL_DEF(1, 1, 1),COL_DEF(1,1, 1),COL_DEF(1, 1, 1)},
+		//Grey
+		{COL_DEF(0xFA, 0xFA, 0xFA),COL_DEF(0xF5, 0xF5, 0xF5),COL_DEF(0xEE, 0xEE, 0xEE),COL_DEF(0xE0, 0xE0, 0xE0),COL_DEF(0xBD, 0xBD, 0xBD),COL_DEF(0x9E, 0x9E, 0x9E),COL_DEF(0x75, 0x75, 0x75),COL_DEF(0x61, 0x61, 0x61),COL_DEF(0x42, 0x42, 0x42),COL_DEF(0x21, 0x21, 0x21),},
+		//Pink
+		{COL_DEF( 0xFC, 0xE4, 0xEC),COL_DEF(0xF8, 0xBB, 0xD0),COL_DEF(0xF4, 0x8F, 0xB1),COL_DEF(0xF0, 0x62, 0x92),COL_DEF(0xEC, 0x40, 0x7A),COL_DEF(0xE9, 0x1E, 0x63),COL_DEF(0xD8, 0x1B, 0x60),COL_DEF(0xC2, 0x18, 0x5B),COL_DEF(0xAD, 0x14, 0x57),COL_DEF(0x88, 0x0E, 0x4F), },
+		//Purple
+		{COL_DEF( 0xF3, 0xE5, 0xF5),COL_DEF(0xE1, 0xBE, 0xE7),COL_DEF(0xCE, 0x93, 0xD8),COL_DEF(0xBA, 0x68, 0xC8),COL_DEF(0xAB, 0x47, 0xBC),COL_DEF(0x9C, 0x27, 0xB0),COL_DEF(0x8E, 0x24, 0xAA),COL_DEF(0x7B, 0x1F, 0xA2),COL_DEF(0x6A, 0x1B, 0x9A),COL_DEF(0x4A, 0x14, 0x8C),},
+		//DeepPurple
+		{COL_DEF( 0xED, 0xE7, 0xF6),COL_DEF(0xD1, 0xC4, 0xE9),COL_DEF(0xB3, 0x9D, 0xDB),COL_DEF(0x95, 0x75, 0xCD),COL_DEF(0x7E, 0x57, 0xC2),COL_DEF(0x67, 0x3A, 0xB7),COL_DEF(0x5E, 0x35, 0xB1),COL_DEF(0x51, 0x2D, 0xA8),COL_DEF(0x45, 0x27, 0xA0),COL_DEF(0x31, 0x1B, 0x92),},
+		//Indigo
+		{COL_DEF( 0xE8, 0xEA, 0xF6),COL_DEF(0xC5, 0xCA, 0xE9),COL_DEF(0x9F, 0xA8, 0xDA),COL_DEF(0x79, 0x86, 0xCB),COL_DEF(0x5C, 0x6B, 0xC0),COL_DEF(0x3F, 0x51, 0xB5),COL_DEF(0x39, 0x49, 0xAB),COL_DEF(0x30, 0x3F, 0x9F),COL_DEF(0x28, 0x35, 0x93),COL_DEF(0x1A, 0x23, 0x7E),},
+		//LightBlue
+		{COL_DEF( 0xE1, 0xF5, 0xFE),COL_DEF(0xB3, 0xE5, 0xFC),COL_DEF(0x81, 0xD4, 0xFA),COL_DEF(0x4F, 0xC3, 0xF7),COL_DEF(0x29, 0xB6, 0xF6),COL_DEF(0x03, 0xA9, 0xF4),COL_DEF(0x03, 0x9B, 0xE5),COL_DEF(0x02, 0x88, 0xD1),COL_DEF(0x02, 0x77, 0xBD),COL_DEF(0x01, 0x57, 0x9B),},
+		//Cyan
+		{COL_DEF( 0xE0, 0xF7, 0xFA),COL_DEF(0xB2, 0xEB, 0xF2),COL_DEF(0x80, 0xDE, 0xEA),COL_DEF(0x4D, 0xD0, 0xE1),COL_DEF(0x26, 0xC6, 0xDA),COL_DEF(0x00, 0xBC, 0xD4),COL_DEF(0x00, 0xAC, 0xC1),COL_DEF(0x00, 0x97, 0xA7),COL_DEF(0x00, 0x83, 0x8F),COL_DEF(0x00, 0x60, 0x64),},
+		//Teal
+		{COL_DEF( 0xE0, 0xF2, 0xF1),COL_DEF(0xB2, 0xDF, 0xDB),COL_DEF(0x80, 0xCB, 0xC4),COL_DEF(0x4D, 0xB6, 0xAC),COL_DEF(0x26, 0xA6, 0x9A),COL_DEF(0x00, 0x96, 0x88),COL_DEF(0x00, 0x89, 0x7B),COL_DEF(0x00, 0x79, 0x6B),COL_DEF(0x00, 0x69, 0x5C),COL_DEF(0x00, 0x4D, 0x40),},
+		//LightGreen
+		{COL_DEF(0xF1, 0xF8, 0xE9),COL_DEF(0xDC, 0xED, 0xC8),COL_DEF(0xC5, 0xE1, 0xA5),COL_DEF(0xAE, 0xD5, 0x81),COL_DEF(0x9C, 0xCC, 0x65),COL_DEF(0x8B, 0xC3, 0x4A),COL_DEF(0x7C, 0xB3, 0x42),COL_DEF(0x68, 0x9F, 0x38),COL_DEF(0x55, 0x8B, 0x2F),COL_DEF(0x33, 0x69, 0x1E),},		
+		//Lime	
+		{COL_DEF( 0xF9, 0xFB, 0xE7),COL_DEF(0xF0, 0xF4, 0xC3),COL_DEF(0xE6, 0xEE, 0x9C),COL_DEF(0xDC, 0xE7, 0x75),COL_DEF(0xD4, 0xE1, 0x57),COL_DEF(0xCD, 0xDC, 0x39),COL_DEF(0xC0, 0xCA, 0x33),COL_DEF(0xAF, 0xB4, 0x2B),COL_DEF(0x9E, 0x9D, 0x24),COL_DEF(0x82, 0x77, 0x17),},
+		//Yellow
+		{COL_DEF( 0xFF, 0xFD, 0xE7),COL_DEF(0xFF, 0xF9, 0xC4),COL_DEF(0xFF, 0xF5, 0x9D),COL_DEF(0xFF, 0xF1, 0x76),COL_DEF(0xFF, 0xEE, 0x58),COL_DEF(0xFF, 0xEB, 0x3B),COL_DEF(0xFD, 0xD8, 0x35),COL_DEF(0xFB, 0xC0, 0x2D),COL_DEF(0xF9, 0xA8, 0x25),COL_DEF(0xF5, 0x7F, 0x17),},
+		//Amber
+		{COL_DEF( 0xFF, 0xF8, 0xE1),COL_DEF(0xFF, 0xEC, 0xB3),COL_DEF(0xFF, 0xE0, 0x82),COL_DEF(0xFF, 0xD5, 0x4F),COL_DEF(0xFF, 0xCA, 0x28),COL_DEF(0xFF, 0xC1, 0x07),COL_DEF(0xFF, 0xB3, 0x00),COL_DEF(0xFF, 0xA0, 0x00),COL_DEF(0xFF, 0x8F, 0x00),COL_DEF(0xFF, 0x6F, 0x00),},
+		//Orange
+		{COL_DEF( 0xFF, 0xF3, 0xE0),COL_DEF(0xFF, 0xE0, 0xB2),COL_DEF(0xFF, 0xCC, 0x80),COL_DEF(0xFF, 0xB7, 0x4D),COL_DEF(0xFF, 0xA7, 0x26),COL_DEF(0xFF, 0x98, 0x00),COL_DEF(0xFB, 0x8C, 0x00),COL_DEF(0xF5, 0x7C, 0x00),COL_DEF(0xEF, 0x6C, 0x00),COL_DEF(0xE6, 0x51, 0x00),},
+		//DeepOrange
+		{COL_DEF(0xFB, 0xE9, 0xE7),	COL_DEF(0xFF, 0xCC, 0xBC),	COL_DEF(0xFF, 0xAB, 0x91),	COL_DEF(0xFF, 0x8A, 0x65),	COL_DEF(0xFF, 0x70, 0x43),	COL_DEF(0xFF, 0x57, 0x22),	COL_DEF(0xF4, 0x51, 0x1E),	COL_DEF(0xE6, 0x4A, 0x19),	COL_DEF(0xD8, 0x43, 0x15),	COL_DEF(0xBF, 0x36, 0x0C),},
+		//Brown
+		{COL_DEF(0xEF, 0xEB, 0xE9),	COL_DEF(0xD7, 0xCC, 0xC8),	COL_DEF(0xBC, 0xAA, 0xA4),	COL_DEF(0xA1, 0x88, 0x7F),	COL_DEF(0x8D, 0x6E, 0x63),	COL_DEF(0x79, 0x55, 0x48),	COL_DEF(0x6D, 0x4C, 0x41),	COL_DEF(0x5D, 0x40, 0x37),	COL_DEF(0x4E, 0x34, 0x2E),	COL_DEF(0x3E, 0x27, 0x23),}
+	};
+#undef COL_DEF
+
+	static inline const Color& GetColor(const ColorIndex arg_colorIndex, const ShadeIndex arg_shadeIndex = ShadeIndex::Shade_0) {
+		return Colors[static_cast<std::uint8_t> (arg_colorIndex)][static_cast<std::uint8_t> (arg_shadeIndex)];
+	}
+	static inline const Color& Red(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Red,arg_shadeIndex);}
+	static inline const Color& Green(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Green,arg_shadeIndex);}
+	static inline const Color& Blue(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Blue,arg_shadeIndex);}
+	static inline const Color& Black(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Black,arg_shadeIndex);}
+	static inline const Color& White(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::White,arg_shadeIndex);}
+	static inline const Color& Grey(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Grey,arg_shadeIndex);}
+	static inline const Color& Pink(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Pink,arg_shadeIndex);}
+	static inline const Color& Purple(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Purple,arg_shadeIndex);}
+	static inline const Color& DeepPurple(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::DeepPurple,arg_shadeIndex);}
+	static inline const Color& Indigo(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Indigo,arg_shadeIndex);}
+	static inline const Color& LightBlue(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::LightBlue,arg_shadeIndex);}
+	static inline const Color& Cyan(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Cyan,arg_shadeIndex);}
+	static inline const Color& Teal(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Teal,arg_shadeIndex);}
+	static inline const Color& LightGreen(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::LightGreen,arg_shadeIndex);}
+	static inline const Color& Lime(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Lime,arg_shadeIndex);}
+	static inline const Color& Yellow(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Yellow,arg_shadeIndex);}
+	static inline const Color& Amber(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Amber,arg_shadeIndex);}
+	static inline const Color& Orange(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Orange,arg_shadeIndex);}
+	static inline const Color& DeepOrange(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::DeepOrange,arg_shadeIndex);}
+	static inline const Color& Brown(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Brown,arg_shadeIndex);}
+	}
 
 	static Vector2 operator* (const float value, const Vector2& other) {
 		return Vector2(other.x * value, other.y * value);
@@ -3284,7 +3345,6 @@ namespace ButiEngine
 	}
 
 
-	using Color=Vector4 ;
 	using Point2D=Vector2;
 
 
@@ -3307,9 +3367,6 @@ namespace ButiEngine
 	void OutputCereal(const Line& v, const std::string& path);
 
 	void InputCereal(Line& v, const std::string& path);
-
-
-
 }
 
 namespace std {
