@@ -18,12 +18,12 @@ namespace ButiEngine
 	constexpr float BM_1DIV2PI = 0.159154943f;
 	constexpr float BM_PIDIV2 = 1.570796327f;
 	constexpr float BM_PIDIV4 = 0.785398163f;
-	constexpr std::int8_t BM_CHAR_MAX = 127;
-	constexpr std::int16_t BM_SHORT_MAX = 32767;
-	constexpr std::int32_t BM_INT_MAX = 2147483647;
-	constexpr std::uint8_t BM_UCHAR_MAX = 255;
-	constexpr std::uint16_t BM_USHORT_MAX = 65535;
-	constexpr std::uint32_t BM_UINT_MAX = 4294967295;
+	constexpr std::int8_t BM_CHAR_MAX = 0x7F;
+	constexpr std::int16_t BM_SHORT_MAX = 0x7FFF;
+	constexpr std::int32_t BM_INT_MAX = 0x7FFFFFFF;
+	constexpr std::uint8_t BM_UCHAR_MAX = 0xFF;
+	constexpr std::uint16_t BM_USHORT_MAX = 0xFFFF;
+	constexpr std::uint32_t BM_UINT_MAX = 0xFFFFFFFF;
 
 
 	namespace MathHelper {
@@ -2427,7 +2427,7 @@ namespace ButiEngine
 		Shade_8,
 		Shade_9,
 		ShadeIndexMax,
-		Shade_Half = Shade_5,
+		Shade_Default = Shade_5,
 		Shader_Light=Shade_2,
 		Shade_Dark=Shade_8,
 	};
@@ -2476,29 +2476,29 @@ namespace ButiEngine
 	};
 #undef COL_DEF
 
-	static inline const Color& GetColor(const ColorIndex arg_colorIndex, const ShadeIndex arg_shadeIndex = ShadeIndex::Shade_0) {
+	static inline const Color& GetColor(const ColorIndex arg_colorIndex, const ShadeIndex arg_shadeIndex = ShadeIndex::Shade_Default) {
 		return Colors[static_cast<std::uint8_t> (arg_colorIndex)][static_cast<std::uint8_t> (arg_shadeIndex)];
 	}
-	static inline const Color& Red(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Red,arg_shadeIndex);}
-	static inline const Color& Green(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Green,arg_shadeIndex);}
-	static inline const Color& Blue(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Blue,arg_shadeIndex);}
-	static inline const Color& Black(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Black,arg_shadeIndex);}
-	static inline const Color& White(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::White,arg_shadeIndex);}
-	static inline const Color& Grey(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Grey,arg_shadeIndex);}
-	static inline const Color& Pink(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Pink,arg_shadeIndex);}
-	static inline const Color& Purple(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Purple,arg_shadeIndex);}
-	static inline const Color& DeepPurple(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::DeepPurple,arg_shadeIndex);}
-	static inline const Color& Indigo(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Indigo,arg_shadeIndex);}
-	static inline const Color& LightBlue(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::LightBlue,arg_shadeIndex);}
-	static inline const Color& Cyan(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Cyan,arg_shadeIndex);}
-	static inline const Color& Teal(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Teal,arg_shadeIndex);}
-	static inline const Color& LightGreen(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::LightGreen,arg_shadeIndex);}
-	static inline const Color& Lime(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Lime,arg_shadeIndex);}
-	static inline const Color& Yellow(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Yellow,arg_shadeIndex);}
-	static inline const Color& Amber(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Amber,arg_shadeIndex);}
-	static inline const Color& Orange(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Orange,arg_shadeIndex);}
-	static inline const Color& DeepOrange(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::DeepOrange,arg_shadeIndex);}
-	static inline const Color& Brown(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_0){return GetColor(ColorIndex::Brown,arg_shadeIndex);}
+	static inline const Color& Red(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Red,arg_shadeIndex);}
+	static inline const Color& Green(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Green,arg_shadeIndex);}
+	static inline const Color& Blue(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Blue,arg_shadeIndex);}
+	static inline const Color& Black(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Black,arg_shadeIndex);}
+	static inline const Color& White(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::White,arg_shadeIndex);}
+	static inline const Color& Grey(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Grey,arg_shadeIndex);}
+	static inline const Color& Pink(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Pink,arg_shadeIndex);}
+	static inline const Color& Purple(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Purple,arg_shadeIndex);}
+	static inline const Color& DeepPurple(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::DeepPurple,arg_shadeIndex);}
+	static inline const Color& Indigo(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Indigo,arg_shadeIndex);}
+	static inline const Color& LightBlue(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::LightBlue,arg_shadeIndex);}
+	static inline const Color& Cyan(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Cyan,arg_shadeIndex);}
+	static inline const Color& Teal(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Teal,arg_shadeIndex);}
+	static inline const Color& LightGreen(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::LightGreen,arg_shadeIndex);}
+	static inline const Color& Lime(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Lime,arg_shadeIndex);}
+	static inline const Color& Yellow(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Yellow,arg_shadeIndex);}
+	static inline const Color& Amber(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Amber,arg_shadeIndex);}
+	static inline const Color& Orange(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Orange,arg_shadeIndex);}
+	static inline const Color& DeepOrange(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::DeepOrange,arg_shadeIndex);}
+	static inline const Color& Brown(const ShadeIndex arg_shadeIndex=ShadeIndex::Shade_Default){return GetColor(ColorIndex::Brown,arg_shadeIndex);}
 	}
 
 	static Vector2 operator* (const float value, const Vector2& other) {
