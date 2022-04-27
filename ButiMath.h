@@ -2,7 +2,7 @@
 #ifndef BUTI_MATH_H
 #define BUTI_MATH_H
 #include<cmath>
-
+#include<cstdint>
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
