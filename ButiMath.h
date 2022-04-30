@@ -2323,12 +2323,12 @@ namespace ButiEngine
 			Matrix4x4 mt(Temp);
 			Vector3 Rot;
 			if (mt._32 == 1.0f) {
-				Rot.x = BM_PI / 2.0f;
+				Rot.x = BM_PI*0.5f;
 				Rot.y = 0;
 				Rot.z = -atan2(mt._21, mt._11);
 			}
 			else if (mt._32 == -1.0f) {
-				Rot.x = -BM_PI / 2.0f;
+				Rot.x = -BM_PI *0.5f;
 				Rot.y = 0;
 				Rot.z = -atan2(mt._21, mt._11);
 			}
@@ -3300,12 +3300,12 @@ namespace ButiEngine
 		Vector3 Rot;
 		if (this->_31 == 1.0f) {
 			Rot.x = atan2(-this->_32,this->_33);
-			Rot.y = BM_PI / 2.0f;
+			Rot.y = BM_PI*0.5f;
 			Rot.z = 0;
 		}
 		else if (this->_31 == -1.0f) {
 			Rot.x = atan2(-this->_32,this->_33);
-			Rot.y = -BM_PI / 2.0f;
+			Rot.y = -BM_PI *0.5f;
 			Rot.z = 0;
 		}
 		else {
@@ -3325,12 +3325,12 @@ namespace ButiEngine
 		Vector3 Rot;
 		if (this->_13 == 1.0f) {
 			Rot.x = atan2(this->_23 , this->_33);
-			Rot.y = BM_PI / 2.0f;
+			Rot.y = BM_PI *0.5f;
 			Rot.z = 0;
 		}
 		else if (this->_13 == -1.0f) {
 			Rot.x = atan2(this->_23 , this->_33 );
-			Rot.y = -BM_PI / 2.0f;
+			Rot.y = -BM_PI *0.5f;
 			Rot.z = 0;
 		}
 		else {
