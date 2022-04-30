@@ -2598,6 +2598,9 @@ namespace ButiEngine
 
 		return out;
 	}
+	static float Lerp(const float arg_start, const float arg_end, const float t) {
+		return arg_start + t * (arg_end - arg_start);
+	}
 	static Vector3 LerpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float t) {
 		return arg_startPoint + (arg_endPoint - arg_startPoint) * t;
 
@@ -2993,7 +2996,7 @@ namespace ButiEngine
 			this->_34 = 0;
 			this->_14 = 0;
 			this->_24 = 0;
-			this->_34 = 0;
+			this->_43 = 0;
 			this->_44 = 1;
 		}
 		else {
