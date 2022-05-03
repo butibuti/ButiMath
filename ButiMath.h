@@ -3040,7 +3040,7 @@ namespace ButiEngine
 	}
 	inline Matrix4x4& Matrix4x4::SetLookAt(const Vector3& arg_position)
 	{
-		return SetLookAt(Vector3Const::YAxis);
+		return SetLookAt(arg_position, Vector3Const::YAxis);
 	}
 	inline Matrix4x4 ButiEngine::Matrix4x4::GetLookAt(const Vector3& arg_position, const Vector3& arg_upAxis)const
 	{
@@ -3056,7 +3056,7 @@ namespace ButiEngine
 	}
 	inline Matrix4x4 Matrix4x4::GetLookAt(const Vector3& arg_position)const
 	{
-		return GetLookAt(Vector3Const::YAxis);
+		return GetLookAt(arg_position, Vector3Const::YAxis);
 	}
 	inline void ButiEngine::Matrix4x4::SetPosition(const Vector3& arg_pos)
 	{
