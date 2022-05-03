@@ -592,6 +592,11 @@ namespace ButiEngine
 			return true;
 		}
 
+		inline Matrix4x4& SetLookAt(const Vector3& arg_position,const Vector3& arg_upAxis);
+		inline Matrix4x4& SetLookAt(const Vector3& arg_position);
+		inline Matrix4x4 GetLookAt(const Vector3& arg_position, const Vector3& arg_upAxis)const;
+		inline Matrix4x4 GetLookAt(const Vector3& arg_position)const;
+
 		inline void SetPosition(const Vector3& arg_pos);
 		inline const Vector3& GetPosition()const;
 		inline Vector3 GetPosition_Transpose()const;
@@ -3020,6 +3025,38 @@ namespace ButiEngine
 			_43 = 0.0f;
 			_44 = 1.0f;
 		}
+	}
+	inline Matrix4x4& Matrix4x4::SetLookAt(const Vector3& arg_position, const Vector3& arg_upAxis)
+	{
+		Vector3 z = ((Vector3)(arg_position - GetPosition())).GetNormalize();
+		Vector3 x = arg_upAxis.GetCross(z).GetNormalize();
+		Vector3 y = z.GetCross(x).GetNormalize();
+
+		this->_11 = x.x; this->_12 = x.y; this->_13 = x.z;
+		this->_21 = y.x; this->_22 = y.y; this->_23 = y.z;
+		this->_31 = z.x; this->_32 = z.y; this->_33 = z.z;
+
+		return *this;
+	}
+	inline Matrix4x4& Matrix4x4::SetLookAt(const Vector3& arg_position)
+	{
+		return SetLookAt(Vector3Const::YAxis);
+	}
+	inline Matrix4x4 ButiEngine::Matrix4x4::GetLookAt(const Vector3& arg_position, const Vector3& arg_upAxis)const
+	{
+		Vector3 z = ((Vector3)(arg_position - GetPosition())).GetNormalize();
+		Vector3 x = arg_upAxis.GetCross(z).GetNormalize();
+		Vector3 y = z.GetCross(x).GetNormalize();
+		Matrix4x4 output;
+		output._11 = x.x; output._12 = x.y; output._13 = x.z;
+		output._21 = y.x; output._22 = y.y; output._23 = y.z;
+		output._31 = z.x; output._32 = z.y; output._33 = z.z;
+
+		return output;
+	}
+	inline Matrix4x4 Matrix4x4::GetLookAt(const Vector3& arg_position)const
+	{
+		return GetLookAt(Vector3Const::YAxis);
 	}
 	inline void ButiEngine::Matrix4x4::SetPosition(const Vector3& arg_pos)
 	{

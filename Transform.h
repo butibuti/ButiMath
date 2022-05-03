@@ -574,8 +574,7 @@ namespace ButiEngine {
 			return rotation;
 		}
 		inline const Matrix4x4& SetLookAtRotation(const Vector3& arg_targetPos) {
-			static  Vector3 upAxis = Vector3(0, 1, 0);
-			return SetLookAtRotation(arg_targetPos, upAxis);
+			return SetLookAtRotation(arg_targetPos, Vector3Const::YAxis);
 		}
 		inline  Matrix4x4 GetLookAtRotation(const Vector3& arg_targetPos, const Vector3& arg_upAxis) {
 			Vector3 z = ((Vector3)(arg_targetPos - GetWorldPosition())).GetNormalize();
