@@ -1305,7 +1305,7 @@ namespace ButiEngine
 		}
 		inline Vector3 operator /(const Vector3& other)const {
 
-			return Vector3(other.x / x, other.y / y, other.z / z);
+			return Vector3(this->x/other.x , this->y / other.y, this->z/ other.z);
 		}
 
 

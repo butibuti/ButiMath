@@ -515,10 +515,12 @@ public:
 		Vector3 x = arg_upAxis.GetCross(z).GetNormalize();
 		Vector3 y = z.GetCross(x).GetNormalize();
 
+		Matrix4x4 worldRotation;
+		worldRotation._11 = x.x; worldRotation._12 = x.y; worldRotation._13 = x.z;
+		worldRotation._21 = y.x; worldRotation._22 = y.y; worldRotation._23 = y.z;
+		worldRotation._31 = z.x; worldRotation._32 = z.y; worldRotation._33 = z.z;
+		SetWorldRotation(worldRotation);
 		std::lock_guard lock(mtx_transform);
-		rotation._11 = x.x; rotation._12 = x.y; rotation._13 = x.z;
-		rotation._21 = y.x; rotation._22 = y.y; rotation._23 = y.z;
-		rotation._31 = z.x; rotation._32 = z.y; rotation._33 = z.z;
 		return rotation;
 	}
 	inline const Matrix4x4& SetLookAtRotation(const Vector3& arg_targetPos) {
