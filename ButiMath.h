@@ -2579,7 +2579,7 @@ namespace ButiEngine
 		}
 		Quat out = Quat();
 		const float len1 = arg_firstQuat.GetLength();
-		const float len2 = arg_firstQuat.GetLength();
+		const float len2 = arg_secondQuat.GetLength();
 
 		if (len1 == 0.0f || len2 == 0.0f)
 			return out;
@@ -2587,8 +2587,8 @@ namespace ButiEngine
 		const float cos_val = (arg_firstQuat[0] * secQ[0] + arg_firstQuat[1] * secQ[1] + arg_firstQuat[2] * secQ[2] + arg_firstQuat[3] * secQ[3]) / (len1 * len2);
 
 
-		if (abs(cos_val - 1.0f) < 0.001) {
-			return arg_firstQuat;
+		if (abs(cos_val - 1.0f) < 0.00001) {
+			return arg_secondQuat;
 		}
 		const float w = acosf(cos_val);
 		const float sin_w = sinf(w);
