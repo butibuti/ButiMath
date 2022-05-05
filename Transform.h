@@ -621,25 +621,30 @@ public:
 	}
 	inline void SetBaseTransform(Value_ptr<Transform> arg_Parent, const bool arg_isKeepLocalPosition = false)
 	{
-		std::lock_guard baseLock(mtx_baseTransform);
 		if (!arg_Parent) {
 			if (arg_isKeepLocalPosition) {
+				std::lock_guard baseLock(mtx_baseTransform);
 				baseTransform = arg_Parent;
 				return;
 			}
+			auto keepPos = GetWorldPosition();
+			auto keepRotate = GetWorldRotation();
 			DeleteLocalMatrix();
-			std::lock_guard lock(mtx_transform);
-			rotation = GetWorldRotation();
-			localPosition = GetWorldPosition();
+			rotation = keepRotate;
+			localPosition = keepPos;
+			std::lock_guard baseLock(mtx_baseTransform);
 			baseTransform = arg_Parent;
 			return;
 		}
 		if (!arg_isKeepLocalPosition) {
+			auto keepPos = GetWorldPosition();
+			auto keepRotate = GetWorldRotation();
 			{
+				std::lock_guard baseLock(mtx_baseTransform);
 				baseTransform = arg_Parent;
 			}
-			localPosition = localPosition - baseTransform->GetWorldPosition();
-			rotation = rotation * baseTransform->GetWorldRotation().Inverse();
+			SetWorldPosition(keepPos);
+			SetWorldRotation(keepRotate);
 			if (localMatrix) {
 				localMatrix->_41 = localPosition.x;
 				localMatrix->_42 = localPosition.y;
@@ -647,6 +652,7 @@ public:
 			}
 		}
 		else {
+			std::lock_guard baseLock(mtx_baseTransform);
 			baseTransform = arg_Parent;
 		}
 	}
