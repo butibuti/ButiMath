@@ -8,7 +8,7 @@ namespace ButiEngine {
 
         struct Sphere {
             Vector3 position;
-            float radius = 1.0f; 
+            float radius =0.5f; 
             Sphere() {}
             Sphere(const Vector3& p, const float r) : position(p), radius(r) {}
             Sphere(const float r) :radius(r) {}
