@@ -78,8 +78,8 @@ public:
 	}
 	inline Matrix4x4 GetMatrix()
 	{
-		std::lock_guard baseLock(mtx_baseTransform);
 		Matrix4x4 output = GetLocalMatrix();
+		std::lock_guard baseLock(mtx_baseTransform);
 		if (baseTransform) {
 			auto baseMatrix = baseTransform->GetMatrix();
 			output = output * baseMatrix;
@@ -113,6 +113,12 @@ public:
 		return output;
 	}
 
+	inline void DeleteLocalMatrix() {
+		std::lock_guard lock(mtx_transform);
+		if (localMatrix)
+			delete localMatrix;
+		localMatrix = nullptr;
+	}
 	inline const Matrix4x4 GetLocalMatrix()
 	{
 		std::lock_guard lock(mtx_transform);
@@ -134,12 +140,9 @@ public:
 
 	}
 
-	Value_ptr<Transform> Clone() {
-		std::lock_guard lock(mtx_transform);
-		std::lock_guard baseLock(mtx_baseTransform);
+	Value_ptr<Transform> Clone()const {
 		auto output = ButiEngine::make_value<Transform>(localPosition, rotation, scale);
-		if (baseTransform)
-			output->SetBaseTransform(baseTransform, true);
+		output->SetBaseTransform(baseTransform, true);
 		return output;
 	}
 
@@ -161,14 +164,7 @@ public:
 
 	inline Matrix4x4 GetWorldRotation()
 	{
-		std::lock_guard lock(mtx_transform);
-		std::lock_guard baseLock(mtx_baseTransform);
-		auto output = rotation;
-		if (!baseTransform) {
-			return output;
-		}
-		output = output * baseTransform->GetWorldRotation();
-		return output;
+		return GetMatrix_WithoutScale().RemovePosition();
 	}
 
 	inline const Matrix4x4& SetLocalRotationIdentity() {
@@ -188,11 +184,11 @@ public:
 		std::lock_guard baseLock(mtx_baseTransform);
 		if (baseTransform) {
 			rotation = arg_rotation * baseTransform->GetWorldRotation().GetInverse();
-			return rotation;
 		}
-		else
-
-			return rotation = arg_rotation;
+		else {
+			rotation = arg_rotation;
+		}
+		return rotation ;
 	}
 	inline const Matrix4x4& SetLocalRotation(const Vector3& arg_vec3_rotation) {
 		DeleteLocalMatrix();
@@ -621,6 +617,12 @@ public:
 	}
 	inline void SetBaseTransform(Value_ptr<Transform> arg_Parent, const bool arg_isKeepLocalPosition = false)
 	{
+		{
+			std::lock_guard baseLock(mtx_baseTransform);
+			if (arg_Parent == baseTransform) {
+				return;
+			}
+		}
 		if (!arg_Parent) {
 			if (arg_isKeepLocalPosition) {
 				std::lock_guard baseLock(mtx_baseTransform);
@@ -659,12 +661,6 @@ public:
 	inline Value_ptr<Transform> GetBaseTransform()
 	{
 		return baseTransform;
-	}
-	inline void DeleteLocalMatrix() {
-		std::lock_guard lock(mtx_transform);
-		if (localMatrix)
-			delete localMatrix;
-		localMatrix = nullptr;
 	}
 
 
