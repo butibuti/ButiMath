@@ -619,6 +619,8 @@ namespace ButiEngine
 		inline Matrix4x4 GetOnlyRotation_transpose()const;
 		inline Matrix4x4& RemovePosition();
 		inline Matrix4x4 GetRemovePosition()const;
+		inline Matrix4x4& RemoveRotation();
+		inline Matrix4x4 GetRemoveRotation()const;
 		static inline Matrix4x4 Translate(const Vector3& arg_position);
 		static inline Matrix4x4 Scale(const Vector3& arg_scale);
 
@@ -3244,7 +3246,7 @@ namespace ButiEngine
 
 		return output;
 	}
-	inline Matrix4x4&  ButiEngine::Matrix4x4::RemovePosition()
+	inline Matrix4x4& ButiEngine::Matrix4x4::RemovePosition()
 	{
 		_41 = 0;
 		_42 = 0;
@@ -3257,6 +3259,21 @@ namespace ButiEngine
 		output._41 = 0;
 		output._42 = 0;
 		output._43 = 0;
+		return output;
+	}
+	inline Matrix4x4& ButiEngine::Matrix4x4::RemoveRotation()
+	{
+		_11 = 1; _12 = 0; _13 = 0; _14 = 0;
+		_21 = 0; _22 = 1; _23 = 0; _24 = 0;
+		_31 = 0; _32 = 0; _33 = 1; _34 = 0;
+		return *this;
+	}
+	inline Matrix4x4 Matrix4x4::GetRemoveRotation() const
+	{
+		auto output = *this;
+		output._11 = 1; output._12 = 0; output._13 = 0; output._14 = 0;
+		output._21 = 0; output._22 = 1; output._23 = 0; output._24 = 0;
+		output._31 = 0; output._32 = 0; output._33 = 1; output._34 = 0;
 		return output;
 	}
 	inline Matrix4x4 ButiEngine::Matrix4x4::Translate(const Vector3& arg_position)
