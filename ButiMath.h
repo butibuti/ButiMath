@@ -3,6 +3,8 @@
 #define BUTI_MATH_H
 #include<cmath>
 #include<cstdint>
+#include<string>
+#include<vector>
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
@@ -2046,7 +2048,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y, z, w);
+			archive(x,y,z,w);
 		}
 
 #ifdef USE_DIRECTXMATH
@@ -3353,14 +3355,13 @@ namespace ButiEngine
 	static const float EulerXLimit = 90.0f / 180.0f * BM_PI;
 	inline Vector3 Matrix4x4::GetEulerOneValue_local() const
 	{
-
 		Vector3 Rot;
-		if (this->_31 == 1.0f) {
+		if (this->_13 - 1.0f < 0.01f&& this->_13 - 1.0f >= -0.01f) {
 			Rot.x = atan2(-this->_32,this->_33);
 			Rot.y = BM_PI*0.5f;
 			Rot.z = 0;
 		}
-		else if (this->_31 == -1.0f) {
+		else if (this->_13 + 1.0f < 0.01f && this->_13 + 1.0f >= -0.01f) {
 			Rot.x = atan2(-this->_32,this->_33);
 			Rot.y = -BM_PI *0.5f;
 			Rot.z = 0;
@@ -3400,30 +3401,7 @@ namespace ButiEngine
 
 		return Rot;
 	}
-
-
 	using Point2D=Vector2;
-
-
-	void OutputCereal(const Vector2& v, const std::string& path);
-
-	void InputCereal(Vector2& v, const std::string& path);
-
-	void OutputCereal(const Vector3& v, const std::string& path);
-
-	void InputCereal(Vector3& v, const std::string& path);
-
-	void OutputCereal(const Vector4& v, const std::string& path);
-
-	void InputCereal(Vector4& v, const std::string& path);
-
-	void OutputCereal(const Matrix4x4& v, const std::string& path);
-
-	void InputCereal(Matrix4x4& v, const std::string& path);
-
-	void OutputCereal(const Line& v, const std::string& path);
-
-	void InputCereal(Line& v, const std::string& path);
 }
 
 namespace std {
