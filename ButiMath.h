@@ -3357,12 +3357,12 @@ namespace ButiEngine
 	{
 		Vector3 Rot;
 		if (this->_13 - 1.0f < 0.01f&& this->_13 - 1.0f >= -0.01f) {
-			Rot.x = atan2(-this->_32,this->_33);
+			Rot.x = atan2(-this->_23,this->_33);
 			Rot.y = BM_PI*0.5f;
 			Rot.z = 0;
 		}
 		else if (this->_13 + 1.0f < 0.01f && this->_13 + 1.0f >= -0.01f) {
-			Rot.x = atan2(-this->_32,this->_33);
+			Rot.x = atan2(-this->_23,this->_33);
 			Rot.y = -BM_PI *0.5f;
 			Rot.z = 0;
 		}
