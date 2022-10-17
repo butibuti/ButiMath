@@ -12,6 +12,29 @@
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
+#ifndef CEREAL_NVP
+#define CEREAL_NVP(T) ::cereal::make_nvp(#T, T)
+#endif // !CEREAL_NVP
+
+#ifndef ARCHIVE_BUTI
+#define ARCHIVE_BUTI(v)\
+	archive(CEREAL_NVP(v));
+#endif // !ARCHIVE_BUTI
+
+#ifndef ARCHIVE2_BUTI
+#define ARCHIVE2_BUTI(v,v2)\
+	archive(CEREAL_NVP(v),CEREAL_NVP(v2));
+#endif // !ARCHIVE2_BUTI
+#ifndef ARCHIVE3_BUTI
+#define ARCHIVE3_BUTI(v,v2,v3)\
+	archive(CEREAL_NVP(v),CEREAL_NVP(v2),CEREAL_NVP(v3));
+#endif // !ARCHIVE3_BUTI
+#ifndef ARCHIVE4_BUTI
+#define ARCHIVE4_BUTI(v,v2,v3,v4)\
+	archive(CEREAL_NVP(v),CEREAL_NVP(v2),CEREAL_NVP(v3),CEREAL_NVP(v4));
+#endif // !ARCHIVE4_BUTI
+
+
 namespace ButiEngine
 {
 	constexpr float BM_PI = 3.141592654f;
@@ -168,7 +191,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y);
+			ARCHIVE2_BUTI(x, y);
 		}
 		std::int32_t x, y;
 	};
@@ -195,7 +218,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y,z);
+			ARCHIVE3_BUTI(x, y,z);
 		}
 		std::int32_t x, y,z;
 	};
@@ -224,7 +247,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y,z,w);
+			ARCHIVE4_BUTI(x, y,z,w);
 		}
 		std::int32_t x, y,z,w;
 	};
@@ -246,7 +269,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y);
+			ARCHIVE2_BUTI(x, y);
 		}
 		std::uint32_t x, y;
 	};
@@ -270,7 +293,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y, z);
+			ARCHIVE3_BUTI(x, y, z);
 		}
 		std::uint32_t x, y, z;
 	};
@@ -296,7 +319,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y, z,w);
+			ARCHIVE4_BUTI(x, y, z,w);
 		}
 		std::uint32_t x, y, z,w;
 	};
@@ -831,10 +854,10 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(this->_11, this->_12, this->_13, this->_14);
-			archive(this->_21, this->_22, this->_23, this->_24);
-			archive(this->_31, this->_32, this->_33, this->_34);
-			archive(this->_41, this->_42, this->_43, this->_44);
+			ARCHIVE4_BUTI(this->_11, this->_12, this->_13, this->_14);
+			ARCHIVE4_BUTI(this->_21, this->_22, this->_23, this->_24);
+			ARCHIVE4_BUTI(this->_31, this->_32, this->_33, this->_34);
+			ARCHIVE4_BUTI(this->_41, this->_42, this->_43, this->_44);
 		}
 
 #ifdef USE_DIRECTXMATH
@@ -1162,7 +1185,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y);
+			ARCHIVE2_BUTI(x, y);
 		}
 
 
@@ -1673,7 +1696,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y, z);
+			ARCHIVE3_BUTI(x, y, z);
 		}
 #ifdef USE_DIRECTXMATH
 		//DirectXMath‚Æ‚ÌŒÝŠ·
@@ -2048,7 +2071,7 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x,y,z,w);
+			ARCHIVE4_BUTI(x,y,z,w);
 		}
 
 #ifdef USE_DIRECTXMATH
@@ -2676,8 +2699,8 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(point);
-			archive(velocity);
+			ARCHIVE_BUTI(point);
+			ARCHIVE_BUTI(velocity);
 
 		}
 	};
@@ -2933,8 +2956,8 @@ namespace ButiEngine
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(vec_points);
-			archive(unit);
+			ARCHIVE_BUTI(vec_points);
+			ARCHIVE_BUTI(unit);
 		}
 
 	private:

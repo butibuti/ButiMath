@@ -116,7 +116,7 @@ public:
 	inline void DeleteLocalMatrix() {
 		std::lock_guard lock(mtx_transform);
 		if (localMatrix)
-			delete localMatrix;
+			ButiMemorySystem::Allocator::deallocate( localMatrix);
 		localMatrix = nullptr;
 	}
 	inline const Matrix4x4 GetLocalMatrix()
@@ -126,7 +126,7 @@ public:
 		{
 			return *localMatrix;
 		}
-		localMatrix = new Matrix4x4();
+		localMatrix = ButiMemorySystem::Allocator::allocate<Matrix4x4>();
 		{
 
 			*localMatrix = Matrix4x4().Scale(scale) * rotation;
