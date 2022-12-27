@@ -671,7 +671,6 @@ public:
 		archive(scale);
 		archive(rotation);
 		archive(baseTransform);
-
 	}
 protected:
 	Vector3 localPosition = Vector3(0.0f, 0.0f, 0.0f);
@@ -739,6 +738,22 @@ public:
 				localMatrix->_43 = localPosition.z;
 			}
 		}
+	}
+
+	Value_ptr<BoneTransform> Clone_BoneTransform()const {
+		auto output = ButiEngine::make_value<BoneTransform>(localPosition, rotation, scale);
+		output->SetBaseTransform(baseTransform, true);
+		output->SetParentTransform(parentBoneTransform, true);
+		return output;
+	}
+	template<class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(localPosition);
+		archive(scale);
+		archive(rotation);
+		archive(baseTransform);
+		archive(parentBoneTransform);
 	}
 private:
 	Value_ptr<BoneTransform> parentBoneTransform = nullptr;

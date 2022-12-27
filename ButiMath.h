@@ -438,6 +438,14 @@ namespace ButiEngine
 			output._41 = -output._41; output._42 = -output._42; output._43 = -output._43; output._44 = -output._44;
 			return output;
 		}
+		inline Matrix4x4 operator+=(const Matrix4x4& other) {
+			*this = (*this) + other;
+			return *this;
+		}
+		inline Matrix4x4 operator-=(const Matrix4x4& other) {
+			*this = (*this) - other;
+			return *this;
+		}
 		inline Matrix4x4 operator*=(const Matrix4x4& other) {
 			*this = (*this) * other;
 			return *this;
