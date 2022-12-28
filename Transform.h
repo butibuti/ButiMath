@@ -753,7 +753,7 @@ public:
 		archive(scale);
 		archive(rotation);
 		archive(baseTransform);
-		archive(parentBoneTransform);
+		//archive(parentBoneTransform);
 	}
 private:
 	Value_ptr<BoneTransform> parentBoneTransform = nullptr;
